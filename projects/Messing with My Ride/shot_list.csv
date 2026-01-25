@@ -1,0 +1,347 @@
+Shot_ID,Type,Start_Time,End_Time,Duration,Status,Lyrics,Concept,Visual_Prompt,Image_Path,Video_Path
+S001,Action,0.0,3.36400111648587,3.36400111648587,Pending,,"Rain-slicked neon alleys of Neo-Tokyo pulse under a violet haze, their glow bleeding into wet pavement as a sleek hoverbike blurs past holographic billboards. The rider — Kitty — glides in silhouette, leather-clad and electric purple-outlined, her motion arresting the frame with effortless rebellion.","**Keywords & Visual Details for AI Image Generator:**
+
+*Scene Setting:*  
+Neo-Tokyo alleyway at twilight or night — rain-slicked streets reflecting neon lights; violet atmospheric haze saturates the air; wet pavement mirrors glowing signs and streaks of motion blur; towering buildings with cyberpunk architecture lining both sides.
+
+*Lighting & Atmosphere:*  
+Neon glow from holographic billboards (blue, magenta, electric cyan) bleeding into rain-soaked surfaces; ambient violet sky tone casting a moody, cinematic ambiance; reflections shimmer on wet asphalt; low-angle perspective enhances depth and drama.
+
+*Foreground Action:*  
+A sleek, futuristic hoverbike — matte black with glowing purple accents — zips across the frame from left to right, leaving motion blur trails behind. Rider (Kitty) is in silhouette against neon backdrops, clad in form-fitting leather gear outlined in electric purple; hair flowing backward, posture confident and rebellious.
+
+*Composition & Style:*  
+Dynamic diagonal composition following bike’s trajectory; shallow depth of field blurs distant buildings while keeping rider and hoverbike sharp; cyberpunk aesthetic with high contrast, saturated colors, and cinematic lighting; no text overlays.
+
+*Emotional Tone:*  
+Effortless rebellion, urban grit, electric energy — a moment frozen in motion that feels both dangerous and beautiful.
+
+— *Render style: Cyberpunk noir, neon-drenched, cinematic, motion-blur realism.*",,
+S002,Action,3.36400111648587,6.513490356853535,3.149489240367666,Pending,,"Rain-slicked neon alleyways glow with electric violet haze as a sleek hoverbike blurs past holographic billboards, its rider — Kitty — silhouetted in leather and motion, her form outlined by streaks of purple light. The wet pavement reflects fractured neon, while floating ads flicker like dying stars above the city’s pulse.","**Scene Keywords & Visual Details:**
+
+- **Setting:** Urban alleyway at night, rain-slicked streets reflecting neon  
+- **Atmosphere:** Electric violet haze permeates air, moody cyberpunk ambiance  
+- **Lighting:** Neon billboards cast fractured reflections on wet asphalt; holographic ads flicker above like dying stars  
+- **Subject:** Sleek hoverbike in motion — blurred edges convey high speed  
+- **Rider (Kitty):** Silhouetted figure clad in fitted leather gear, posture dynamic and athletic  
+- **Light Trails:** Purple streaks trace rider’s form, emphasizing motion against dark backdrop  
+- **Environment:** Gritty alley flanked by towering buildings with glowing signage; floating ads hover mid-air with glitchy, fading effects  
+- **Style:** Cinematic cyberpunk, high contrast between neon glow and shadowed urban decay  
+- **No Text Overlays:** Pure visual storytelling — focus on motion, color, light reflection, and atmospheric tension
+
+---
+
+**Prompt for AI Image Generator (e.g., Midjourney, DALL·E 3):**
+
+*“A cinematic cyberpunk alleyway at night under electric violet haze. Rain-slicked pavement reflects fractured neon lights from towering holographic billboards that flicker like dying stars above. A sleek hoverbike blurs past in motion, its rider — Kitty — silhouetted against the glow, clad in leather, outlined by vivid purple light streaks emphasizing speed. Floating ads drift overhead with glitchy decay effects. High contrast, moody atmosphere, cinematic lighting, no text.”*",,
+S003,Action,6.513490356853535,8.682,2.168509643146464,Pending,,"Rain-slicked neon alleyways pulse with electric violet haze as a sleek hoverbike zips past flickering holographic billboards. The rider — Kitty, leather-clad and silhouetted in glowing purple — glides effortlessly, her motion leaving a trail of chromatic afterimages against the wet cityscape.","**Keywords & Visual Details for AI Image Generator:**
+
+- **Scene Setting:** Rain-slicked urban alleyway at night, neon-drenched, cyberpunk atmosphere  
+- **Lighting:** Electric violet haze dominates; reflections shimmer on wet pavement and raindrops  
+- **Foreground Action:** Sleek hoverbike zipping past — low to ground, glowing underbelly trails chromatic afterimages (RGB blur effect)  
+- **Rider:** Silhouetted figure named Kitty, wearing tight-fitting leather gear with neon purple highlights or embedded glow elements  
+- **Background Elements:** Flickering holographic billboards casting shifting light patterns; fragmented digital advertisements floating above alleyway  
+- **Atmosphere:** Wet cityscape gleaming under artificial lights; rain streaks diagonally across frame; motion blur on bike and surroundings for speed and dynamism  
+- **Color Palette:** Deep purples, electric blues, neon magentas — contrasted with dark shadows of the alley  
+- **Mood:** Futuristic grit meets high-speed elegance; cinematic tension, immersive tech-noir vibe  
+- **No Text Overlays**
+
+*Style Note:* Think Blade Runner meets Ghost in the Shell — hyper-detailed, painterly motion blur, volumetric lighting, and saturated neon glow.",,
+S004,Vocal,8.682,13.682,5.0,Pending,,"Kitty, lips parted mid-lyric, glows under a violet neon wash as her silhouette cuts through rain-drenched air — eyes locked forward, smirk curling at the corner of her mouth. Her leather-clad form blurs slightly with motion, haloed by electric purple reflections from flickering holographic signs overhead.","**Prompt:**
+
+A dynamic, cinematic portrait of a stylized female figure—Kitty—in mid-performance under a moody, rain-slicked urban night. She is captured mid-song, lips parted as if singing a lyric, eyes intensely focused forward with a confident smirk curling at the corner of her mouth. Her silhouette glows softly against the dark background, bathed in an electric violet neon wash that pulses through the scene.
+
+She wears sleek, form-fitting leather attire—jacket, pants, boots—with sharp lines catching fragmented light. Motion blur trails gently around her limbs, suggesting rapid movement or dance, adding energy and dynamism to the frame.
+
+Above, flickering holographic signs cast jagged reflections of electric purple and magenta across wet pavement and rain-splattered air. The neon glow refracts off water droplets in mid-air, creating a dreamlike halo effect around her form. Rain streaks diagonally across the scene, enhancing depth and texture while mirroring the neon light.
+
+The atmosphere is gritty yet glamorous—neo-noir meets cyberpunk glamour—with saturated colors dominated by deep purples, electric blues, and smoky blacks. No text overlays. Focus on expression, motion, and ambient lighting to convey emotion and energy.
+
+**Keywords for AI Image Generator:**  
+cyberpunk, neon night, rain-slicked street, female performer, leather outfit, glowing silhouette, violet neon glow, holographic signs, motion blur, electric purple reflections, confident smirk, cinematic lighting, urban atmosphere, rainy cityscape, dynamic pose, singing mid-lyric, stylized portrait, high contrast, dramatic mood, futuristic noir",,
+S005,Vocal,13.682,18.682,5.0,Pending,,"Kitty leans back barefoot atop her hoverbike, silk and chrome armor catching the flickering neon glow above as she laughs with her companion. The cop car looms behind them, frozen mid-sentence in a rain-slicked alley bathed in violet haze.","**Prompt Keywords & Visual Details:**
+
+* **Subject:** A confident, barefoot female rider (Kitty) reclining back on a sleek hoverbike — relaxed yet poised.
+* **Attire:** She wears form-fitting silk and chrome armor that reflects ambient light with metallic sheen; flowing fabric catches motion.
+* **Expression/Action:** Joyful laughter — mouth open, eyes bright, head tilted back slightly — sharing a moment of levity with a companion beside her (partial view implied).
+* **Vehicle:** Hoverbike — low-slung, futuristic design, glowing underbelly or thrusters subtly visible; chrome accents mirror neon surroundings.
+* **Setting:** Rain-slicked urban alleyway at night — wet pavement reflects distorted neon signs and ambient glow.
+* **Lighting Atmosphere:** Flickering neon hues (violet, cyan, magenta) cast surreal reflections on wet surfaces. Haze adds dreamlike softness to background shadows.
+* **Background Element:** A police car parked behind them — headlights on but motionless; driver mid-sentence gesture frozen in time (slightly blurred for cinematic tension).
+* **Mood/Style:** Cinematic noir-futurism — gritty urban grit meets high-tech glamor. Emotionally charged, dynamic composition with shallow depth of field.
+* **Color Palette:** Dominated by violet haze, electric neon accents, reflective chrome, and saturated wet tones — contrasted against the rider’s warm skin tone and silk sheen.
+
+**No text overlays.**
+
+— End prompt —",,
+S006,Vocal,18.682,22.962,4.28,Pending,,"Kitty leans back with bare feet dangling, her flowing silk and chrome armor catching flickering neon light as she glides effortlessly through an abandoned rooftop district. Her silhouette is bathed in electric purple haze, contrasting against the rain-slicked cityscape behind her.","**Prompt for AI Image Generator:**
+
+*Scene:* A sleek, futuristic female warrior — “Kitty” — reclines languidly on a rain-drenched rooftop ledge, bare feet dangling over the edge. Her body is partially clad in flowing, iridescent silk that billows with motion, interwoven with polished chrome armor that glints and reflects neon hues. She glides effortlessly through an abandoned urban district, suspended mid-motion as if defying gravity.
+
+*Lighting & Atmosphere:* The scene pulses with electric purple haze enveloping her silhouette — a surreal glow blending into the ambient neon reflections of distant buildings. Rain slicks the cityscape behind her, casting shimmering streaks and distorted reflections on wet concrete and shattered glass. Neon signs flicker erratically in crimson, cyan, and magenta, painting the background in fractured, cinematic light.
+
+*Environment:* Abandoned rooftop district — rusted metal scaffolding, broken skylights, overgrown vines creeping across cracked tiles. Distant skyscrapers loom like skeletal giants under a stormy twilight sky. The city feels desolate yet alive with hidden energy.
+
+*Style & Mood:* Cinematic cyberpunk aesthetic — high contrast, saturated neon tones against moody shadows. Ethereal and dynamic composition. Emphasize fluid motion: silk drifting, armor catching light, raindrops suspended in mid-air. Sense of quiet power and effortless grace amid decay.
+
+*No text overlays.*",,
+S007,Action,22.962,25.44705934211515,2.485059342115151,Pending,,"The duo leans back barefoot atop their hoverbike as neon signs flicker overhead in saturated purple tones, their flowing silk and chrome armor catching the glow like liquid mercury. Rain-slicked rooftops blur past beneath them, wind whipping through their hair as the cop car remains frozen mid-sentence behind.","**Keywords & Visual Details for AI Image Generator:**
+
+* **Scene:** Two figures leaning back barefoot atop a sleek hoverbike, suspended in motion above rain-slicked city rooftops  
+* **Lighting & Atmosphere:** Neon signs overhead casting saturated purple hues; ambient glow reflecting off wet surfaces and metallic surfaces  
+* **Characters:** Flowing silk garments draped elegantly over chrome armor; fabric catching neon light like liquid mercury; wind-blown hair, dynamic movement suggested by posture and motion blur  
+* **Vehicle:** Futuristic hoverbike with aerodynamic design, low to the ground, hovering slightly above rooftops; polished chrome surfaces gleaming under artificial light  
+* **Background:** Urban skyline at night — blurred rooftop edges, rain streaks across glass and metal surfaces creating motion blur effects  
+* **Static Element:** A cop car frozen mid-sentence behind them (implied by open mouth, windshield wipers still, headlights on) — contrast with the fluidity of the hoverbike scene  
+* **Mood & Vibe:** Cinematic, high-energy, cyberpunk noir; sense of freedom and rebellion against urban grit; cinematic composition with shallow depth of field focusing on characters  
+* **Color Palette:** Dominant purples from neon signs, mirrored in wet surfaces; metallic chrome accents, deep shadows contrasting with glowing highlights; hints of electric blue or magenta from distant lights
+
+**No text overlays.**
+
+This prompt balances dynamic motion, atmospheric lighting, and narrative implication — perfect for generating a visually rich cinematic scene with implied story tension.",,
+S008,Action,25.44705934211515,27.900332701856183,2.4532733597410323,Pending,,"Rain-slicked neon alleyways pulse with electric violet haze as Kitty and her companion glide past flickering holographic ads — barefoot, carefree, silhouetted in chrome and silk against a wet, glowing cityscape. Their hoverbike leaves no tire marks, only shimmering trails of purple light that blur into the night.","**Prompt Keywords & Visual Details:**
+
+*Neon-drenched alleyway at night — rain-slicked pavement reflecting electric violet haze, glossy chrome surfaces glistening under artificial glow. Holographic ads flicker in vibrant neon blues and pinks, casting shifting light across wet walls and puddles. Two figures glide barefoot on a sleek hoverbike — silhouetted against the luminous backdrop, wearing flowing silk garments with metallic accents (chrome-like sheen). Hoverbike trails shimmering purple energy streaks behind them, dissolving into mist as they move. No tire marks visible — only glowing motion trails. Cityscape beyond: towering skyscrapers wrapped in neon lights, raindrops suspended mid-air catching the glow. Moody cinematic lighting, shallow depth of field, high contrast between dark shadows and radiant neon. Urban cyberpunk atmosphere with dreamlike fluidity. No text overlays. Atmospheric, immersive, dynamic motion blur on light trails.*",,
+S009,Action,27.900332701856183,31.109880231845175,3.209547529988992,Pending,,"Rain-slicked neon alleyways pulse with electric violet haze as Kitty’s hoverbike glides past flickering holographic ads, her leather-clad silhouette outlined in shimmering purple light. The wind whips through her hair as she leans back barefoot, silk and chrome armor catching the glow of overhead signs — carefree, defiant, suspended between gravity and neon.","**Scene Keywords & Visual Details:**
+
+- **Setting:** Rain-slicked alleyway at night, wet pavement reflecting neon light  
+- **Color Palette:** Electric violet haze dominates; deep purples, blues, and magenta highlights from holographic ads contrast with dark urban shadows  
+- **Atmosphere:** Moody cyberpunk vibe — gritty yet glamorous, cinematic, immersive, rain-slicked surfaces shimmering under artificial glow  
+- **Subject:** A lone female rider (Kitty) on a sleek hoverbike — silhouette outlined in pulsating purple neon  
+- **Attire:** Sleek leather outfit with metallic chrome armor accents; flowing silk elements catching light as she moves  
+- **Action:** Hoverbike glides smoothly through alley, slightly tilted as she leans back barefoot — wind whipping her hair dynamically  
+- **Environment Details:** Flickering holographic ads hovering above — abstract or branded visuals (e.g., glowing product displays, floating text)  
+- **Lighting:** Overhead neon signs cast sharp reflections and highlights on wet surfaces; ambient glow from distant buildings enhances depth  
+- **Composition:** Low-angle shot emphasizing motion and freedom; rider centered but framed by alley walls to emphasize confinement vs. liberation  
+- **Mood & Tone:** Defiant, carefree, rebellious — suspended between gravity and neon, exuding confidence and raw urban energy  
+
+**Style Notes (for AI generator):** Cyberpunk aesthetic with high contrast lighting, cinematic composition, dynamic motion blur on raindrops and bike trails, stylized yet grounded realism. No text overlays.
+
+— *Generate with emphasis on mood, texture of wet surfaces, glowing reflections, and fluid movement.*",,
+S010,Action,31.109880231845175,33.32849611343615,2.218615881590975,Pending,,"Rain-slicked neon alleyways glow under a violet haze as the hoverbike’s electric purple trail slices through flickering holographic ads. The rider’s silhouette — leather-clad and confident — hovers mid-drift, her motion blurred by speed and wind whipping past chrome armor.","Rain-slicked alleyway  
+Neon glow reflections on wet pavement  
+Violet atmospheric haze  
+Electric purple hoverbike trail (motion blur)  
+Flickering holographic ads in background  
+Rider silhouette — leather-clad outfit, confident posture  
+Mid-drift maneuver, dynamic angle  
+Motion blur from speed and wind  
+Chrome armor details catching light  
+Urban cyberpunk setting  
+Low-angle shot emphasizing speed and height  
+No text overlays  
+Moody cinematic lighting with saturated neon tones",,
+S011,Action,33.32849611343615,35.69981675463963,2.371320641203476,Pending,,"Rain-slicked neon alleyways glow violet under flickering holographic signs as a sleek hoverbike zips past, its trail of electric purple light slicing through the mist. The rider, Kitty — leather-clad and poised — glides with effortless grace, her silhouette sharp against the cyberpunk haze.","**Keywords & Visual Details for AI Image Generator:**
+
+* **Setting**: Rain-slicked neon alleyway at night, wet pavement reflecting ambient glow  
+* **Atmosphere**: Cyberpunk haze, mist swirling in low light, moody and cinematic  
+* **Lighting**: Flickering holographic signs casting violet and electric purple hues; reflections on wet surfaces  
+* **Foreground Action**: Sleek hoverbike zipping past — trail of glowing electric purple light slicing through mist  
+* **Rider (Kitty)**: Silhouette in sharp focus, leather-clad (dark motorcyle jacket, pants, gloves), poised and confident posture  
+* **Style**: High-detail cinematic render, Blade Runner meets neon-noir aesthetic  
+* **Mood**: Futuristic grit, dynamic motion, urban mystery, immersive cyberpunk energy  
+* **No Text Overlays** — pure visual storytelling  
+
+*(Optional for AI engine: “Ultra HD 8K, Unreal Engine style, volumetric lighting, shallow depth of field, raindrop streaks on glass surfaces”)*",,
+S012,Action,35.69981675463963,37.76525192200539,2.0654351673657594,Pending,,"Rain-slicked neon alleyways pulse with electric violet haze as a sleek hoverbike zips past flickering holographic billboards — its rider, Kitty, glides effortlessly in silhouette, leather-clad and smirking beneath the glow of cyberpunk signs. The air shimmers with glitch artifacts, trailing behind her like digital smoke.","**Prompt Keywords & Visual Details:**
+
+- **Setting:** Rain-slicked neon alleyway at night — wet pavement reflects distorted holographic light, creating shimmering reflections.
+- **Atmosphere:** Electric violet haze permeates the air; cyberpunk aesthetic with saturated neon glow (purples, magentas, electric blues).
+- **Main Subject:** Sleek, futuristic hoverbike zipping through frame — low profile, glowing underbelly lights, aerodynamic design.
+- **Rider:** Silhouette of Kitty — leather-clad in fitted black or dark metallic gear; confident smirk visible beneath helmet visor (glowing faintly with ambient light).
+- **Background Elements:** Flickering holographic billboards displaying fragmented text and glitching imagery — some signs partially obscured by rain and digital distortion.
+- **Visual Effects:** Glitch artifacts trailing behind rider like shimmering digital smoke or data trails; subtle chromatic aberration on edges of motion blur.
+- **Lighting:** Neon glow dominates scene — reflections bounce off wet surfaces, casting long shadows. Holograms cast soft glows onto walls and ground.
+- **Mood:** High-energy, cinematic, gritty yet stylish — evokes motion, rebellion, and urban futurism.
+- **Composition:** Dynamic angle — rider moving diagonally across frame; shallow depth of field blurs background billboards while keeping hoverbike sharp.
+
+No text overlays. All elements rendered in rich cyberpunk detail with emphasis on motion, neon contrast, and digital distortion effects.",,
+S013,Action,37.76525192200539,40.207,2.4417480779946152,Pending,,"Rain-slicked neon alleyways pulse under a violet haze as the hoverbike’s silhouette slices through the frame — its electric purple glow reflecting off wet pavement. The rider leans into a turn, hair whipping back, chrome armor catching the flickering holographic ads overhead.","**Keywords & Visual Details for AI Image Generator:**
+
+* **Scene:** Urban alleyway at night, rain-slicked streets, neon-lit environment  
+* **Atmosphere:** Moody, cinematic, cyberpunk, atmospheric haze (violet tint), wet reflective surfaces  
+* **Lighting:** Electric purple glow from hoverbike + ambient neon reflections on pavement; flickering holographic ads overhead casting shifting light  
+* **Main Subject:** Hoverbike in motion — sleek, futuristic design, glowing electric purple undercarriage and rim lights  
+* **Rider Details:** Silhouette leaning into a turn, hair flying back dramatically, wearing chrome-plated armor (refractive highlights), helmet with subtle LED glow  
+* **Background Elements:** Gritty urban alley flanked by towering buildings, holographic billboards projecting fragmented ads, raindrops visible in air and puddles, distant cityscape blurred with neon haze  
+* **Composition:** Dynamic low-angle shot, motion blur on bike wheels and background to convey speed, rider positioned off-center for cinematic tension  
+* **Color Palette:** Dominant violet and electric purple tones; accents of cyan, magenta, red neon glows; dark grays and blacks in wet pavement and shadows  
+* **No Text Overlays** — pure visual storytelling
+
+—
+
+This prompt creates a high-impact cyberpunk scene with kinetic energy, immersive lighting, and atmospheric depth — perfect for AI image generation.",,
+S014,Vocal,40.207,42.775,2.568,Pending,,"Kitty leans back barefoot atop her hoverbike, silk and chrome armor catching neon reflections as rain streaks the alley behind them. The cop car looms frozen in mid-sentence just beyond the flickering glow of a cherry blossom hologram.","**Keywords & Visual Details for AI Image Generator:**
+
+- **Subject:** A confident female figure (Kitty) reclining barefoot atop a sleek hoverbike  
+- **Posture:** Leaning back casually, legs crossed, relaxed yet dominant stance  
+- **Attire:** Silk and chrome armor — flowing fabric meets metallic sheen, reflecting neon lights with sharp highlights  
+- **Environment:** Urban alleyway at night, wet pavement glistening under rain streaks (visible diagonal motion blur)  
+- **Lighting & Atmosphere:** Neon reflections dancing across surfaces — magenta, cyan, electric yellow tones; moody, cinematic ambiance  
+- **Background Element 1:** A cop car frozen mid-motion (doors slightly ajar, headlights on but unblinking), positioned just beyond the alley entrance  
+- **Background Element 2:** Floating cherry blossom hologram — glowing pink-white petals drifting in slow motion, casting soft light and ethereal glow against dark walls  
+- **Mood & Tone:** Cool, rebellious, futuristic noir — tension between stillness (Kitty) and impending action (cop car), dreamlike contrast with tech  
+- **Style Direction:** Cyberpunk meets anime-inspired realism — high detail on textures (rain droplets, chrome reflections, fabric folds), shallow depth of field to isolate subject  
+- **No Text Overlays**  
+
+*Optional Enhancements:* Add subtle motion blur around rain and hologram particles for dynamism; include faint cityscape silhouettes in far background.",,
+S015,Action,42.775,43.595,0.82,Pending,,"Rain-slicked neon alleyways pulse under a violet haze as a sleek hoverbike glides past flickering holographic ads — its rider’s silhouette outlined in electric purple, barefoot and carefree against the cyberpunk grit.","**Keywords & Visual Details for AI Image Generator:**
+
+- **Setting**: Rain-slicked urban alleyway at night, neon-lit, cyberpunk atmosphere  
+- **Lighting**: Violet haze dominates sky; flickering holographic ads cast pulsating glow (cyan, magenta, electric blue) on wet pavement  
+- **Vehicle**: Sleek, low-profile hoverbike with glowing underglow trails and aerodynamic design — hovering 3–5 inches above ground  
+- **Rider**: Silhouette of lone figure, barefoot, long hair flowing; outlined in electric purple neon glow; posture relaxed yet dynamic (arms outstretched or leaning into turn)  
+- **Environment**: Gritty urban decay — crumbling brick walls, rusted pipes, puddles reflecting neon lights, distant towering skyscrapers with glowing signage  
+- **Atmosphere**: Moody, cinematic, immersive cyberpunk grit — rain streaks across surfaces, mist swirls in alley shadows, ambient glow from ads creates high contrast and depth  
+- **Style**: Hyper-detailed digital illustration, cinematic lighting, Blade Runner meets neon-noir aesthetic  
+- **No Text Overlays** — focus on visual storytelling through color, motion blur, reflections, and silhouette contrast
+
+*Prompt for AI image generators (e.g., Midjourney or DALL·E):*
+
+> “A sleek hoverbike gliding at night through a rain-slicked cyberpunk alleyway under a violet haze. Flickering holographic ads pulse with neon colors — cyan, magenta, electric blue — reflecting off wet pavement. Rider is a barefoot silhouette outlined in electric purple glow, long hair flowing, posture carefree and dynamic. Gritty urban decay: crumbling brick walls, rusted pipes, puddles mirroring neon lights. Cinematic lighting, Blade Runner meets neon-noir style, hyper-detailed digital illustration. No text overlays.”",,
+S016,Vocal,43.595,48.595,5.0,Pending,,"Kitty leans back with a smirk, barefoot and carefree atop her hoverbike as neon signs flicker overhead, casting electric purple hues across her silk-clad silhouette. Her companion glides beside her, both framed by the rain-slicked alley’s glow — the city’s pulse thrumming beneath their effortless flight.","**Visual Prompt:**
+
+A sleek, minimalist hoverbike glides effortlessly through a rain-drenched urban alleyway at night. On top of it, a confident young woman—Kitty—leans back with relaxed grace, barefoot and smirking, her posture carefree and magnetic. She wears shimmering silk pants in deep violet, catching the neon glow as she floats above the wet pavement. Her companion—a similarly stylish figure—rides beside her on an identical hoverbike, their forms blurred slightly by motion, synced to the rhythm of the city.
+
+Above them, towering neon signs pulse with electric purple and cyan hues, casting dynamic reflections across rain-slicked walls and puddles below. The alley’s brickwork glows with ambient light refracted from above, while distant skyscrapers loom in shadowy silhouette. Raindrops glisten on chrome edges and glass facades, adding texture and depth to the scene.
+
+The city pulses beneath them—faint hums of traffic, flickering streetlamps, glowing storefront windows—and yet they move with effortless fluidity, suspended between gravity and neon dreams. Motion blur trails behind their bikes, emphasizing speed without chaos. No text overlays. Atmosphere: cinematic, cyberpunk elegance, wet-lit glamour, high-tech freedom.
+
+**Keywords:**  
+neon cityscape, rain-slicked alley, hoverbikes, barefoot woman, silk attire, electric purple lighting, cyberpunk aesthetic, motion blur, urban night, futuristic transportation, carefree expression, glowing reflections, cinematic composition, atmospheric glow, wet pavement, stylish companion, floating above ground, high-tech glamour, ambient city pulse.
+
+— No text. Pure visual storytelling.",,
+S017,Vocal,48.595,53.595,5.0,Pending,,"Kitty smirks confidently over her shoulder as she rides the hoverbike, her leather-clad silhouette glowing faintly in electric purple against the rain-slicked neon backdrop of Neo-Tokyo. Her bare feet dangle casually from the bike’s edge, trailing smoke that curls like rocket fuel into the violet-hazed night.","**Keywords & Visual Details for AI Image Generator:**
+
+- **Subject:** A confident female rider (Kitty), smirking over her shoulder with a playful, cocky expression  
+- **Attire:** Sleek, form-fitting leather outfit — dark tones with electric purple highlights; bare feet dangling casually from hoverbike edge  
+- **Vehicle:** Futuristic hoverbike — low-profile, glowing under neon lights, hovering just above rain-slicked pavement  
+- **Action/Posture:** Mid-motion glide through city streets; body angled slightly backward in a relaxed, dominant pose; smoke trails curling from her feet like rocket exhaust or vaporized fuel  
+- **Environment:** Neo-Tokyo night — towering skyscrapers with glowing neon signs (violet, cyan, magenta), rain-slicked streets reflecting chaotic light patterns  
+- **Lighting & Atmosphere:** Electric purple ambient glow washes over scene; neon reflections shimmer on wet asphalt; misty haze adds depth and cyberpunk mood  
+- **Mood/Tone:** Edgy, rebellious, glamorous — fusion of high-tech futurism and raw street style  
+- **Style:** Cyberpunk cinematic — hyper-detailed, saturated color palette, dynamic motion blur on smoke trails and rain streaks  
+- **No text overlays**
+
+*Render with dramatic lighting, shallow depth of field to emphasize subject, lens flare from neon sources, and misty atmospheric haze.*",,
+S018,Vocal,53.595,58.595,5.0,Pending,,"Kitty leans back barefoot atop her hoverbike, silhouetted against a flickering neon sign that casts purple-glowing reflections across rain-slicked rooftops. Her flowing silk and chrome armor shimmer as she smiles smugly at a frozen cop below — the breeze whipping strands of hair around her face like electric smoke.","**Scene Keywords & Visual Details:**
+
+- **Subject:** A confident, barefoot woman (Kitty) reclining casually atop a hoverbike  
+- **Pose:** Leaning back with relaxed posture, one hand resting on handlebars, the other gesturing slightly — smirk playing on her lips  
+- **Attire:** Flowing silk garment blending with sleek chrome armor, catching ambient light and rain reflections  
+- **Hoverbike Design:** Sleek, low-profile vehicle hovering just above wet rooftops; glowing underbelly lights or subtle propulsion trails visible  
+- **Environment:** Rain-slicked urban rooftopscape at night — distant buildings blurred by mist and motion  
+- **Lighting & Mood:** Stark silhouette against a pulsating neon sign (purple glow dominant) casting warped reflections on glossy surfaces  
+- **Weather Effects:** Heavy rain creating shimmering ripples across rooftops; droplets suspended mid-air, catching neon light  
+- **Wind Motion:** Hair whipping dynamically around her face like electric smoke — strands glowing faintly with ambient luminescence  
+- **Foreground Element:** Frozen police officer below — crouched or kneeling on wet pavement, camera poised to capture scene (no visible movement)  
+- **Color Palette:** Deep purples and electric blues from neon; metallic silver of armor and bike; dark shadows contrasting with glowing highlights  
+- **Atmosphere:** Cyberpunk meets noir — gritty cityscape, rain-soaked textures, futuristic tech juxtaposed with human swagger  
+
+*No text overlays. Focus on cinematic composition: high-angle shot emphasizing Kitty’s dominance over the scene.*",,
+S019,Vocal,58.595,61.153,2.558,Pending,,"Kitty leans back with bare feet against the hoverbike’s chrome seat, her silk-clad silhouette bathed in flickering neon purple as rain streaks down the rooftop behind her. Her smirk is sharp and unapologetic — eyes locked forward, wind whipping strands of hair across her face as she glides through the abandoned district.","**Prompt for AI Image Generator:**
+
+*Urban night scene – a sleek hoverbike gliding over a rain-slicked rooftop in an abandoned futuristic district.*  
+A young woman (Kitty) leans back casually, bare feet pressed against the chrome seat of the hoverbike — her legs crossed at the ankles, silk-clad silhouette gleaming under neon light. Rain streaks diagonally across the frame, reflecting distorted purple and blue neon glow from surrounding buildings. Her dark hair is windswept, strands flying across her face as wind whips past her motion. She wears a fitted black silk outfit with high collar and thigh-high boots — one hand lightly gripping the bike’s handlebar, the other resting behind her head in relaxed defiance. Her expression: sharp smirk, eyes locked forward, unapologetic gaze cutting through the gloom.  
+Background details: crumbling industrial structures, broken windows glowing faintly from within, puddles reflecting neon signs and streaky rain. Distant flickering lights cast long shadows — atmosphere is moody, cinematic, cyberpunk-inspired with gritty realism and saturated color contrast (purple/neon vs. dark grays). No text overlays.  
+Style: High-detail cinematic render – reminiscent of Blade Runner meets cyberpunk anime, with dramatic lighting and dynamic motion blur in rain.
+
+— *No text, no logo, pure visual storytelling.*",,
+S020,Action,61.153,62.258,1.105,Pending,,"A slow-motion cascade of cherry blossoms drifts past the hoverbike’s chrome undercarriage, each petal glowing with violet light as they fall like suspended jewels around the rider’s silhouette. The wind whips her silk-clad form as she leans back, barefoot and carefree, against a backdrop of fading neon signs and rain-slicked rooftops.","**Prompt Keywords & Visual Details:**
+
+- **Slow-motion cascade**: Petals falling in graceful suspension, captured mid-air with motion blur trails  
+- **Cherry blossoms**: Delicate pink-white petals infused with glowing violet luminescence — each petal like a suspended jewel  
+- **Hoverbike undercarriage**: Sleek chrome frame gleaming under ambient light; reflective surfaces catching rain and neon reflections  
+- **Rider silhouette**: Barefoot, flowing silk garments fluttering dramatically in wind — posture leaning back in serene abandon  
+- **Wind dynamics**: Hair and fabric whipping outward with motion lines, enhancing sense of speed and freedom  
+- **Urban backdrop**: Rain-slicked rooftops glistening under wet city glow; fading neon signs casting soft cyan, magenta, and amber hues into shadows  
+- **Atmosphere**: Ethereal, cinematic — dreamlike fusion of nature and cyberpunk urbanism; shallow depth of field isolating rider against blurred background  
+- **Lighting**: Low-angle ambient glow from neon + petal luminescence creating high contrast highlights on chrome and skin tones  
+- **Mood**: Carefree, poetic, fleeting beauty — moment suspended between motion and stillness  
+
+**Style Note**: Photorealistic cinematic composition with painterly soft focus on background; ultra-detailed textures on silk, metal, and wet surfaces. No text overlays.
+
+--- 
+*Generate as a dynamic wide-angle shot, emphasizing the contrast between organic blossoms and mechanical hoverbike — a surreal ballet of nature and technology.*",,
+S021,Vocal,62.258,64.762,2.504,Pending,,"A slow-motion cherry blossom falls past Kitty’s face as she leans back in her hoverbike, barefoot and grinning beneath a violet-tinged neon sky — petals glinting like jewels against her chrome armor. The wind catches strands of her hair as the city fades into blurred streaks behind them.","**Scene Keywords & Visual Details for AI Image Generator:**
+
+* **Main Subject:**  
+  - A young woman (Kitty) with bare feet, leaning back in a sleek hoverbike — relaxed posture, wide grin, eyes sparkling with joy  
+  - Hair flowing freely, caught by wind — strands lifted dynamically  
+  - Wearing chrome-plated armor with reflective surfaces catching neon light — hints of metallic sheen and futuristic design  
+
+* **Action & Motion:**  
+  - Slow-motion capture: a single cherry blossom petal drifting past her face (blurred motion trail around the petal)  
+  - Hoverbike gliding forward, slight tilt suggesting momentum and freedom  
+  - Wind distortion effect on clothing/hair — dynamic movement lines visible in air  
+
+* **Environment & Atmosphere:**  
+  - Urban skyline fading into motion blur behind them — streaks of lights, buildings blurred horizontally to imply speed  
+  - Sky: deep violet-tinged neon glow — gradient from indigo near horizon to electric purple above  
+  - Ambient city lights reflected subtly on chrome armor and wet pavement (if present)  
+
+* **Lighting & Color Palette:**  
+  - Neon-infused ambient lighting — cool tones with pops of magenta, cyan, and lavender  
+  - Cherry blossom petals: iridescent gold-pink glints like jewels under neon glow — refracting light as they drift  
+  - Contrasting warm skin tone against cold chrome and violet sky  
+
+* **Style & Mood:**  
+  - Cinematic slow-motion aesthetic with shallow depth of field (background blurred, focus on Kitty’s face and petal)  
+  - Futuristic cyberpunk meets romantic spring atmosphere — delicate nature vs. mechanical cityscape  
+  - Emotional tone: carefree joy, freedom, beauty in motion  
+
+* **No Text Overlays:**  
+  - Pure visual storytelling — no captions or logos  
+
+**Prompt for AI Image Generator (Example):**
+
+> A slow-motion shot of a joyful young woman, Kitty, barefoot and grinning as she leans back on her sleek chrome hoverbike, wind lifting strands of her hair. A single glowing cherry blossom petal drifts past her face like a jewel in neon light — petals shimmering with iridescent gold-pink tones. Behind her: the city blurs into streaks of electric lights under a violet-tinged cyberpunk sky. Futuristic chrome armor reflects ambient neon, creating dynamic highlights. Cinematic composition, shallow depth of field, motion blur on background, dreamlike atmosphere blending nature and tech — no text overlays.
+
+Let me know if you’d like to adjust the mood, setting (e.g., rainy night, desert city), or add more characters!",,
+S022,Action,64.762,67.21602542372285,2.454025423722846,Pending,,,,,
+S023,Action,67.21602542372285,68.864,1.647974576277154,Pending,,,,,
+S024,Vocal,68.864,72.73,3.866,Pending,,,,,
+S025,Action,72.73,73.473,0.743,Pending,,,,,
+S026,Vocal,73.473,78.473,5.0,Pending,,,,,
+S027,Vocal,78.473,83.473,5.0,Pending,,,,,
+S028,Vocal,83.473,86.802,3.329,Pending,,,,,
+S029,Action,86.802,88.773,1.971,Pending,,,,,
+S030,Vocal,88.773,89.941,1.168,Pending,,,,,
+S031,Action,89.941,93.91039416953157,3.9693941695315775,Pending,,,,,
+S032,Action,93.91039416953157,96.81003280010005,2.8996386305684765,Pending,,,,,
+S033,Action,96.81003280010005,99.97728036668474,3.16724756658469,Pending,,,,,
+S034,Action,99.97728036668474,103.9536088033437,3.976328436658963,Pending,,,,,
+S035,Action,103.9536088033437,106.59380259383862,2.640193790494913,Pending,,,,,
+S036,Action,106.59380259383862,107.296,0.7021974061613809,Pending,,,,,
+S037,Vocal,107.296,112.296,5.0,Pending,,,,,
+S038,Vocal,112.296,117.296,5.0,Pending,,,,,
+S039,Vocal,117.296,121.913,4.617,Pending,,,,,
+S040,Action,121.913,123.95782998269637,2.044829982696365,Pending,,,,,
+S041,Action,123.95782998269637,126.74960847990579,2.7917784972094246,Pending,,,,,
+S042,Action,126.74960847990579,129.74090783922142,2.9912993593156374,Pending,,,,,
+S043,Action,129.74090783922142,131.8619154005684,2.121007561346959,Pending,,,,,
+S044,Action,131.8619154005684,134.21761556358862,2.3557001630202365,Pending,,,,,
+S045,Action,134.21761556358862,137.41344064372993,3.195825080141323,Pending,,,,,
+S046,Action,137.41344064372993,138.725,1.3115593562700543,Pending,,,,,
+S047,Vocal,138.725,141.26,2.535,Pending,,,,,
+S048,Action,141.26,142.214,0.954,Pending,,,,,
+S049,Vocal,142.214,147.214,5.0,Pending,,,,,
+S050,Vocal,147.214,152.214,5.0,Pending,,,,,
+S051,Vocal,152.214,156.165,3.951,Pending,,,,,
+S052,Action,156.165,157.325,1.16,Pending,,,,,
+S053,Vocal,157.325,162.325,5.0,Pending,,,,,
+S054,Vocal,162.325,163.322,0.997,Pending,,,,,
+S055,Action,163.322,165.53621964786012,2.2142196478601237,Pending,,,,,
+S056,Action,165.53621964786012,169.14310037369353,3.606880725833421,Pending,,,,,
+S057,Action,169.14310037369353,171.613389743148,2.4702893694544623,Pending,,,,,
+S058,Action,171.613389743148,173.92742214658418,2.314032403436158,Pending,,,,,
+S059,Action,173.92742214658418,176.4921127588954,2.5646906123112183,Pending,,,,,
+S060,Action,176.4921127588954,177.858,1.3658872411046163,Pending,,,,,
+S061,Vocal,177.858,178.225,0.367,Pending,,,,,
+S062,Action,178.225,181.29015066779655,3.065150667796559,Pending,,,,,
+S063,Action,181.29015066779655,184.55256716765288,3.262416499856334,Pending,,,,,
+S064,Action,184.55256716765288,187.1353862439957,2.5828190763427985,Pending,,,,,
+S065,Action,187.1353862439957,189.34117013268207,2.2057838886863825,Pending,,,,,
+S066,Action,189.34117013268207,192.96681724711013,3.625647114428042,Pending,,,,,
+S067,Action,192.96681724711013,195.22828820550413,2.261470958393998,Pending,,,,,
+S068,Action,195.22828820550413,195.98931972789114,0.7610315223870407,Pending,,,,,
