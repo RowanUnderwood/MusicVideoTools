@@ -99,10 +99,45 @@ def get_global_llm():
 
 def save_global_llm(model_id):
     try:
+        data = {}
+        if os.path.exists(GLOBAL_SETTINGS_FILE):
+            with open(GLOBAL_SETTINGS_FILE, "r") as f:
+                data = json.load(f)
+        data["last_llm"] = model_id
         with open(GLOBAL_SETTINGS_FILE, "w") as f:
-            json.dump({"last_llm": model_id}, f)
+            json.dump(data, f, indent=4)
     except:
         pass
+
+def load_global_url_settings():
+    global LTX_BASE_URL, LM_STUDIO_URL
+    try:
+        if os.path.exists(GLOBAL_SETTINGS_FILE):
+            with open(GLOBAL_SETTINGS_FILE, "r") as f:
+                data = json.load(f)
+                LTX_BASE_URL = data.get("ltx_base_url", LTX_BASE_URL)
+                LM_STUDIO_URL = data.get("lm_studio_url", LM_STUDIO_URL)
+    except:
+        pass
+
+def save_global_url_settings(ltx_url, lm_url):
+    global LTX_BASE_URL, LM_STUDIO_URL
+    LTX_BASE_URL = ltx_url.strip()
+    LM_STUDIO_URL = lm_url.strip()
+    try:
+        data = {}
+        if os.path.exists(GLOBAL_SETTINGS_FILE):
+            with open(GLOBAL_SETTINGS_FILE, "r") as f:
+                data = json.load(f)
+        data["ltx_base_url"] = LTX_BASE_URL
+        data["lm_studio_url"] = LM_STUDIO_URL
+        with open(GLOBAL_SETTINGS_FILE, "w") as f:
+            json.dump(data, f, indent=4)
+        return "✅ Settings saved and applied."
+    except Exception as e:
+        return f"❌ Error saving settings: {e}"
+
+load_global_url_settings()
 
 # ==========================================
 # SYSTEM UTILITIES
@@ -159,8 +194,8 @@ def format_time(seconds):
 # ==========================================
 
 class LLMBridge:
-    def __init__(self, base_url=LM_STUDIO_URL):
-        self.base_url = base_url
+    def __init__(self, base_url=None):
+        self.base_url = base_url if base_url is not None else LM_STUDIO_URL
 
     def get_models(self):
         try:
@@ -1478,6 +1513,147 @@ with gr.Blocks(title="Music Video AI Studio", theme=gr.themes.Default(), css=css
         
         assemble_btn.click(lambda s, res, pm: assemble_video(get_file_path(s), res, pm, fallback_mode=False), inputs=[song_up, vid_resolution_dropdown, pm_state], outputs=[final_video_out])
         assemble_current_btn.click(lambda s, res, pm: assemble_video(get_file_path(s), res, pm, fallback_mode=True), inputs=[song_up, vid_resolution_dropdown, pm_state], outputs=[final_video_out])
+
+# --- TAB 5: SETTINGS ---
+    with gr.Tab("5. Settings"):
+        gr.Markdown("### ⚙️ Global Settings")
+        gr.Markdown("These settings apply globally across all projects and are saved immediately on click.")
+        with gr.Row():
+            ltx_url_in = gr.Textbox(label="LTX Desktop API URL", value=LTX_BASE_URL, placeholder="http://127.0.0.1:8000/api")
+            lm_url_in = gr.Textbox(label="LM Studio API URL", value=LM_STUDIO_URL, placeholder="http://127.0.0.1:1234/v1")
+        save_settings_btn = gr.Button("💾 Save Settings", variant="primary")
+        settings_status = gr.Textbox(label="Status", interactive=False)
+        save_settings_btn.click(save_global_url_settings, inputs=[ltx_url_in, lm_url_in], outputs=[settings_status])
+
+# --- TAB 6: HELP ---
+    with gr.Tab("6. Help"):
+        gr.HTML("""
+        <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js"
+          data-name="bmc-button" data-slug="jacobpederson" data-color="#FFDD00" data-emoji=""
+          data-font="Lato" data-text="Buy me a coffee" data-outline-color="#000000"
+          data-font-color="#000000" data-coffee-color="#ffffff"></script>
+        """)
+        gr.Markdown("""
+# 🎬 AI Music Video Director — User Guide
+
+This application helps you create AI-generated music videos by combining audio analysis, LLM-generated video prompts, and the LTX Desktop video generation engine.
+
+---
+
+## Tab 1 · Project & Assets
+
+**Create a project** by typing a name and clicking *Create New Project*. This sets up all the necessary folders for your project. **Load an existing project** from the dropdown and click *Load Selected Project* — all your previous settings, prompts, and video paths will be restored automatically.
+
+Upload your **vocals audio** (an isolated vocal track — stems work best). The vocals file is used for two things: scanning silence to build the shot timeline, and providing audio sync for generated vocal shots. Optionally upload a **full song** file, which is used as the audio track in the final assembled video.
+
+Paste your **lyrics** in the text box. These are saved with the project and handed to the LLM when generating the overarching plot.
+
+---
+
+## Tab 2 · Storyboard
+
+### Step 1 — Build the Timeline
+
+Click *Scan Vocals & Build Timeline* to analyse the vocals file. The app detects silence gaps and divides the audio into two shot types:
+
+- **Vocal shots** — spans where singing is detected
+- **Action shots** — silent gaps between vocal phrases
+
+Adjust the sliders to fine-tune detection:
+- **Min Silence (ms)** — how long a pause must be to count as silence
+- **Silence Threshold (dB)** — how quiet audio must be to be treated as silent
+- **Action Shot Mode** — *Fixed* uses the Min Duration for every action shot; *Random* picks a random length between Min and Max
+- **Min/Max Duration** — the allowed range for action shot lengths (1–5 seconds)
+
+All shot durations are automatically locked to LTX-compatible frame counts (1–5 second increments at 24 fps).
+
+### Step 2 — Generate Prompts
+
+1. Select your **LLM model** from the dropdown. Click 🔄 to refresh the list from LM Studio.
+2. Write a **rough concept** describing the vibe, setting, or mood of the video.
+3. Click *Generate Singer, Band & Venue Desc* to create a concise visual description of your performer(s). This is also used as the video prompt for all Vocal shots.
+4. Click *Generate Overarching Plot* to produce a cohesive linear narrative based on your concept and lyrics.
+5. Click *Generate Video Prompts* to fill in a cinematic prompt for every Action shot in sequence. The LLM uses the overarching plot and the previous shot's prompt to keep the story coherent.
+
+Use *Regenerate Single Shot* (enter a Shot ID like `S005`) or *Regenerate All Shots* to redo specific prompts. Click *Stop Generation* to pause mid-batch — the current shot finishes before stopping.
+
+**Advanced — Prompt Templates:** Expand this section to customise the instruction sent to the LLM for each Action shot. The following placeholders are filled in automatically: `{plot}`, `{prev_shot}`, `{start}`, `{duration}`, `{type}`.
+
+**Data Management:**
+- *Export CSV* — download the full shot list with all prompts for external editing
+- *Import CSV* — upload an edited CSV to push updated `Video_Prompt` values back in (Shot IDs and Types must match exactly)
+- *Download Story (.txt)* — export every shot's prompt as a readable text file
+
+---
+
+## Tab 3 · Video Generation
+
+### Batch Generation
+
+Select a **Generation Mode**:
+- *Generate Remaining Shots* — only shots that don't yet have a video
+- *Generate all Action Shots* / *Generate all Vocal Shots* — target one shot type
+- *Regenerate all Shots* — delete all existing videos and regenerate from scratch
+
+Set how many **Versions per Shot** to generate (1–5). Having multiple versions gives you options to compare in Tab 4. Choose your **Resolution** (540p → 1440p). Click *Start Batch Generation* to begin. Click *Stop Batch Generation* to halt after the current shot finishes.
+
+**Vocal Shot Prompt Mode** controls which prompt drives video generation for Vocal shots:
+- *Use Singer/Band Description* — uses the performer/venue description from Tab 2
+- *Use Storyboard Prompt* — uses the individually generated shot prompt
+
+### Single Shot Generation
+
+Select a specific shot from the dropdown, optionally edit its prompt inline (changes save automatically), then click *Generate Additional Version* to add another version without deleting existing ones.
+
+### Gallery & Controls
+
+All generated videos appear in the gallery with their Shot ID and frame count. Click a thumbnail to view it full-size on the right panel. From there you can:
+- **🗑️ Delete This Video** — permanently removes the selected video file
+- **♻️ Regenerate Video (Same Prompt)** — deletes the selected video and generates a new one with the same prompt
+- **✨ Regenerate Video AND Prompt** — generates a fresh LLM prompt first, then generates a new video
+
+---
+
+## Tab 4 · Assembly & Cutting Room
+
+### Version Comparison
+
+Select a shot from the dropdown to see all its generated versions side by side (up to 5 at once).
+- Click **⭐ Set as Active** on the version you want to use in the final edit
+- Click **✂️ Move to Cutting Room Floor** to move an unwanted version out of the videos folder (it goes to the `cutting_room/` subfolder, not deleted)
+- Use **➡️ Next Shot** to quickly cycle to the next shot that has multiple versions
+
+The tab automatically refreshes its shot list when you switch to it.
+
+### Final Assembly
+
+Once you're satisfied with your active video selections:
+- **Assemble Final Video (Strictly Videos)** — stops with an error if any shot is missing a video. Use this for a complete edit.
+- **Assemble with Current Assets (Videos > Black Fallback)** — substitutes a black frame for any missing video. Useful for previewing a partial edit.
+
+The assembled video is written to the project's `renders/` folder. The full song audio (from Tab 1) is attached if available; otherwise the vocals file is used as a fallback.
+
+---
+
+## Tab 5 · Settings
+
+Configure the API endpoints used by the application:
+- **LTX Desktop API URL** — the base URL for the LTX video generation backend (default: `http://127.0.0.1:8000/api`)
+- **LM Studio API URL** — the base URL for the local LLM backend (default: `http://127.0.0.1:1234/v1`)
+
+Click *Save Settings* to apply immediately. Settings are stored globally in `global_settings.json` and persist across all projects and sessions.
+
+---
+
+## Tips & Workflow
+
+1. **Vocals file is the backbone** — use a clean isolated vocal track for accurate silence detection. Stems from a vocal remover work well.
+2. **Iterate on prompts** — use Export/Import CSV to batch-edit prompts in a spreadsheet before spending time on video generation.
+3. **Generate multiple versions** — set Versions Per Shot to 2–3 and use the Cutting Room to pick the best take for each shot.
+4. **Use Regenerate AND Prompt** on shots you're unhappy with — sometimes a fresh LLM pass produces a much better visual concept.
+5. **Strict vs. Fallback assembly** — use Fallback mode to preview your edit before all shots are done, then switch to Strict for the final render.
+6. **Hotkey** — press `Ctrl+R` in the terminal window to restart the application quickly without losing your project data.
+        """)
 
 # ==========================================
 # GLOBAL LOGIC & WIRING
