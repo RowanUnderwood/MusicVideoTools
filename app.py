@@ -290,7 +290,7 @@ class ProjectManager:
             
             missing_shots = set(curr_df.index) - set(new_df.index)
             if missing_shots:
-                return f"❌ Error: CSV is missing required Shot IDs: {', '.join(missing_shots)}", self.df
+                return f"❌ Error: CSV is missing required Shot IDs: {', '.join(str(s) for s in missing_shots)}", self.df
 
             if 'Type' not in new_df.columns:
                  return "❌ Error: CSV is missing 'Type' column.", self.df
@@ -635,6 +635,7 @@ def generate_concepts_logic(overarching_plot, prompt_template, llm_model, rough_
 def stop_gen(pm):
     pm.stop_generation = True
     pm.stop_video_generation = True
+    pm.is_generating = False
     return "🛑 Stopping... Waiting for current task to complete..."
 
 # ==========================================
@@ -932,17 +933,6 @@ def assemble_video(full_song_path, resolution, pm, fallback_mode=False):
     expected_cursor = 0.0
     
     target_size = RESOLUTION_MAP.get(resolution, (1920, 1080))
-    
-    for index, row in df.iterrows():
-        vid_path = row.get('Video_Path')
-        if vid_path and pd.notna(vid_path) and os.path.exists(str(vid_path)):
-            try:
-                temp_clip = VideoFileClip(str(vid_path))
-                target_size = tuple(temp_clip.size)
-                temp_clip.close()
-                break
-            except Exception:
-                pass
 
     for index, row in df.iterrows():
         vid_path = row.get('Video_Path')
@@ -1330,7 +1320,7 @@ with gr.Blocks(title="Music Video AI Studio", theme=gr.themes.Default(), css=css
                 
                 if selected_path and os.path.exists(selected_path):
                     try: os.remove(selected_path)
-                    except Exception as e: pass
+                    except Exception as e: print(f"Could not delete file {selected_path}: {e}")
 
                 vid_generator = generate_video_for_shot(shot_id_txt, resolution, vocal_mode, pm)
                 final_path = None
@@ -1630,7 +1620,10 @@ with gr.Blocks(title="Music Video AI Studio", theme=gr.themes.Default(), css=css
         if pm.current_project:
             # Reformat to Pandas DataFrame in case Gradio returns it as a list
             if isinstance(new_df, list):
-                new_df = pd.DataFrame(new_df, columns=REQUIRED_COLUMNS)
+                if new_df and len(new_df[0]) == len(REQUIRED_COLUMNS):
+                    new_df = pd.DataFrame(new_df, columns=REQUIRED_COLUMNS)
+                else:
+                    return  # row width mismatch — don't corrupt data
             pm.df = new_df
             pm.save_data()
             
