@@ -1528,10 +1528,9 @@ with gr.Blocks(title="Music Video AI Studio", theme=gr.themes.Default(), css=css
 # --- TAB 6: HELP ---
     with gr.Tab("6. Help"):
         gr.HTML("""
-        <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js"
-          data-name="bmc-button" data-slug="jacobpederson" data-color="#FFDD00" data-emoji=""
-          data-font="Lato" data-text="Buy me a coffee" data-outline-color="#000000"
-          data-font-color="#000000" data-coffee-color="#ffffff"></script>
+        <a href="https://www.buymeacoffee.com/jacobpederson" target="_blank">
+            <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 50px !important;width: 181px !important;" >
+        </a>
         """)
         gr.Markdown("""
 # 🎬 AI Music Video Director — User Guide
