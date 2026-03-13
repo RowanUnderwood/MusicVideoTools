@@ -1,0 +1,80 @@
+Create a music video via AI video prompts for the following song (see song lyrics below).  See the attached shot list with durations and frame counts. We need to tell a coherent story using the shots labeled "action" in the type column. Do not include any guns in the story as the LTX video model censors them.  Do not use any words in your descriptions like, painted, sketched, or drawn to prevent the video model from creating animated shots.  Return the shot list in CSV format with just the "Shot_ID" "Type" "Video_Prompt" columns. Do NOT include any other text in your reply.  
+
+The AI video prompt for the vocal "Type" shots should always be very similar to the following as we cut to the live performance.  We need to focus on consistency and always being closeup so the lip-sync model has enough pixels to work with.  
+
+"Handheld dynamic closeup shot of a young blues singer, Maya Vance.   She has deep brown skin that gleams under stage lights, contrasting with her intense dark eyes, pools of emotion that seem to hold the song's weight. She has a sharp jawline and high cheekbones, giving her face a sculpted, almost predatory quality that matches the song's themes. Her hair is jet black, worn in a messy high ponytail, strands escaping to frame a face that's both vulnerable and dangerous. She wears a black fitted tank top. Minimal jewelry except for a thin gold chain and a ring on her pointer finger. Her nails are long and dark-polished.  Maya sings with careful lip movements to better accommodate her deaf sister's lip reading.  The setting is a cramped, smokey basement bar in an inner city. She sits on a bar stool. Dim amber lighting from a few hanging bulbs that flicker occasionally. The air smells of cheap beer, body odor, and the ever-present haze of cigarette smoke"
+
+Do not forgot to include the vocal "type" shots in your final csv output. 
+
+Follow the ltx prompt guide below to create each "action" AI video model prompt, but keep in mind that any recuring characters, objects, or locations in the story must be fully described in each prompt as the video model will have no knowledge of what came before.  Give each character a name and refer to them by name in the prompt along with their descriptions.
+
+Establish the shot. Use cinematography terms that match your preferred film genre. Include aspects like scale or specific category characteristics to further refine the style you’re looking for.
+
+Set the scene. Describe lighting conditions, color palette, surface textures, and atmosphere to shape the mood.
+ 
+Describe the action. Write the core action as a natural sequence, flowing from beginning to end.
+
+Define your character(s). Include age, hairstyle, clothing, and distinguishing details. Express emotions through physical cues.
+
+Identify camera movement(s). Specify when the view should shift and how. Including how subjects or objects appear after the camera motion gives the model a better idea of how to finish the motion.
+
+Keep your prompt in a single flowing paragraph to give the model a cohesive scene to work with. 
+Use present tense verbs to describe movement and action.
+Match your detail to the shot scale. Closeups need more precise detail than wide shots.
+When describing camera movement, focus on the camera’s relationship to the subject. 
+You should expect to write 4 to 8 descriptive sentences to cover all the key aspects of the prompt.     
+
+song title:
+
+Orthogonal:
+Prompt: blues rock, drums (drum set), emotional, female vocalist, singer/songwriter, 
+
+[verse 1]
+Of everything I've said and done.
+You were the first and only one.
+To quell the ever present ache.
+First the apple, then the snake.
+
+[chorus]
+She said that pants were optional!
+So I put the weapon in my arsenal.
+She had me feeling emotional.
+All the options were orthogonal.
+
+Please just leave me alone.
+But don't forget to call me on the phone.
+[Bridge]
+
+[verse 2]
+A reminder to the raven:
+taking flight and branded craven.
+If you were to open your beak,
+You'd drop the evidence you seek.
+
+[Pre-Chorus]
+On second thought, I ditched the pants.
+Won't you give me one more chance?
+sinking into the glistening lake.
+I pray the mud my soul to take.
+
+[chorus variation]
+She said that pants were optional!
+So I put the weapon in my arsenal.
+She had me feeling emotional.
+All the options were orthogonal.
+
+Please just leave me alone.
+But don't forget to call me on the phone.
+
+[verse 4]
+Well I'm all on my own now.
+Don't even quite remember how.
+Repose on a mattress on the floor
+Whatever she wanted I want more.
+
+[verse 5]
+Just a minute to talk to you!
+I'll promise all my lies are true.
+Just never look under the bed.
+Suspend your disbelief instead.
+[outro]

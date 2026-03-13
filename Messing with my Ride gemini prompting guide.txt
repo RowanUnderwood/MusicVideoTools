@@ -1,0 +1,69 @@
+Create a music video via AI video prompts for the following song.  See the attached shot list with durations and frame counts. We need to tell a coherent story using the shots labeled "action" in the type column.  Return the shot list file with each "Video_Prompt" field filled out.  
+
+The AI video prompt for the vocal shots should always be very similar to the following as we cut to the live performance.  We need to focus on consistency and always being closeup so the lip-sync model has enough pixels to work with.
+
+"Handheld dynamic closeup shot of a Japanese female cyberpunk singer performing live on stage with black hair, intense passionate expression, neon back-lit face with pink face paint on left and cyan on right, glowing cybernetic eye implants, volumetric stage fog, sweat glistening on skin, dynamic camera movement with slight handheld shake, shallow depth of field, bokeh of neon lights in background, dramatic chiaroscuro lighting, 85mm lens, 24fps, high contrast, cyberpunk aesthetic, electric guitar and synthesizer visible in background, crowd silhouettes, energetic atmosphere, cinematic color grading, teal and orange color palette" 
+
+Follow the ltx prompt guide to create each "action" AI video model prompt:
+
+Establish the shot. Use cinematography terms that match your preferred film genre. Include aspects like scale or specific category characteristics to further refine the style you’re looking for.
+
+Set the scene. Describe lighting conditions, color palette, surface textures, and atmosphere to shape the mood.
+ 
+Describe the action. Write the core action as a natural sequence, flowing from beginning to end.
+
+Define your character(s). Include age, hairstyle, clothing, and distinguishing details. Express emotions through physical cues.
+
+Identify camera movement(s). Specify when the view should shift and how. Including how subjects or objects appear after the camera motion gives the model a better idea of how to finish the motion.
+
+Keep your prompt in a single flowing paragraph to give the model a cohesive scene to work with. 
+Use present tense verbs to describe movement and action.
+Match your detail to the shot scale. Closeups need more precise detail than wide shots.
+When describing camera movement, focus on the camera’s relationship to the subject. 
+You should expect to write 4 to 8 descriptive sentences to cover all the key aspects of the prompt.     
+
+song title:
+Messing with my ride:
+Prompt:   female vocalist, female vocal, hard rock, post-grunge, blues-rock,  
+
+Image concept: A young Japanese woman wearing a jean jacket vest over a white tank top, leather pants, and wooden shoes is leaning on a jet powered vehicle with a leather seat. The background is a cyberpunk cityscape.  A cat sits on the turbine in a custom cat-seat.  The vehicle is essentially a rocket engine with seats and fighter jet style controls.  We will have to aggressively fight against the video model's tendency to depict this as a motorcycle or bike, so never use those words to describe it.  The word "broom" is written on the turbine.
+
+[verse 1]
+Blasting off on a Miami Coven broom.
+Kitty always riding suicide.
+Move on over and give me some room.
+Fires be low and thighs are bee stride.
+
+[Chorus]
+When we're pulled over to the side.
+It's cause I'm messing with my ride.
+We aren't quite dressed for the slide.
+And we got you staring hawk-eyed.
+
+double kicks out on black ice.
+god but this breeze feels nice.
+
+[Verse 2]
+Creamy billowed smoke reeks of rocket fuel.
+while the thought had crossed your mind.
+our cherry fading like a jewel.
+already left you long behind.
+[bridge]
+
+[pre chorus]
+Kitty don't need some staring dude.
+cramping her considerable style.
+We'll be riding in the nude.
+You'll be waiting for a while.
+
+[Chorus variation]
+When we're pulled over to the side.
+It's cause I'm messing with my ride.
+We aren't quite dressed for the slide.
+And we got you staring hawk-eyed.
+
+double kicks out on black ice.
+god but this breeze feels nice.
+
+
+[outro]
