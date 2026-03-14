@@ -80,6 +80,35 @@ LTX_SYSTEM_PROMPT = """You are an expert cinematography AI director writing vide
 9. Camera focus: When describing camera movement, focus on the camera’s relationship to the subject.
 10. Length: Write 4 to 8 descriptive sentences to cover all key aspects."""
 
+BULK_PROMPT_TEMPLATE = """Create a music video via AI video prompts for the following song (see song lyrics below).  See the attached CSV formatted shot list with durations and frame counts. We need to tell a coherent story using the shots labeled "Action" in the type column.  Align your story loosely to the themes and metaphors present in the song's lyrics, or the user suggested plot concept (if present), but do not be afraid to get creative! Do not include any guns in the story as the LTX video model censors them.  Do not use any words in your descriptions like, painted, sketched, or drawn to prevent the video model from creating animated shots.  Return the shot list in CSV format with just the "Shot_ID", "Type" and "Video_Prompt" columns.  Leave the "Vocal" type rows video prompts blank, but include the Shot_ID and Type fields for these rows.  Do NOT include any other text in your reply.  Enclose the video prompt column in "" to prevent any commas inside the video prompt from corrupting the data.
+
+Follow the ltx prompt guide below to create each "action" prompt, but keep in mind that any recuring characters, objects, or locations in the story must be fully described in each prompt as the video model will have no knowledge of what came before.  Give each character a name and refer to them by name in the prompt along with their descriptions.  It is CRITICAL that we have a description of the character's build, face, hair, and clothing in EACH prompt to keep them consistent between shots.
+
+Establish the shot. Use cinematography terms that match your preferred film genre. Include aspects like scale or specific category characteristics to further refine the style you’re looking for.
+
+Set the scene. Describe lighting conditions, color palette, surface textures, and atmosphere to shape the mood.
+ 
+Describe the action. Write the core action as a natural sequence, flowing from beginning to end.
+
+Define your character(s). Include age, hairstyle, clothing, and distinguishing details. Express emotions through physical cues.
+
+Identify camera movement(s). Specify when the view should shift and how. Including how subjects or objects appear after the camera motion gives the model a better idea of how to finish the motion.
+
+Keep your prompt in a single flowing paragraph to give the model a cohesive scene to work with. 
+Use present tense verbs to describe movement and action.
+Match your detail to the shot scale. Closeups need more precise detail than wide shots.
+When describing camera movement, focus on the camera’s relationship to the subject. 
+You should expect to write 4 to 8 descriptive sentences to cover all the key aspects of the prompt.
+
+Song Lyrics:
+{lyrics}
+
+User suggested plot concept:
+{plot}
+
+Shot list:
+{shot_list}"""
+
 # Global cache for ffprobe frame counts to speed up preview loading in Tab 3
 FRAME_COUNT_CACHE = {}
 
@@ -601,18 +630,21 @@ def generate_overarching_plot(concept, lyrics, llm_model, pm):
     )
     yield llm.query(sys_prompt, user_prompt, llm_model)
 
-def generate_performance_description(concept, plot, llm_model):
+def generate_performance_description(concept, plot, gender, llm_model):
     yield "⏳ Generating performance description... (Please wait)"
     llm = LLMBridge()
     sys_prompt = "You are a casting director and set designer."
+    
+    gender_instruction = f"Singer Gender: {gender}\n" if gender and gender.strip() else "Singer Gender: Please invent a gender for the singer.\n"
+    
     user_prompt = (
-        f"Concept: {concept}\nPlot: {plot}\n\n"
-        "Task: Describe the physical appearance and style of the lead singer, specificaly for an AI video generation model. Describe a close-up shot and the microphone.  Do not include any details about the character that would be out of view in a close-up shot."
+        f"Concept: {concept}\nPlot: {plot}\n{gender_instruction}\n"
+        "Task: Describe the physical appearance and style of the lead singer, specifically for an AI video generation model. Start with the phrase 'Handheld dynamic closeup shot of'.  Do not include any details about the character that would be out of view in a close-up shot. "
         "Keep it concise (2-3 sentences)."
     )
     yield llm.query(sys_prompt, user_prompt, llm_model)
 
-def generate_concepts_logic(overarching_plot, prompt_template, llm_model, rough_concept, performance_desc, specific_shot_id, pm):
+def generate_concepts_logic(overarching_plot, llm_model, rough_concept, performance_desc, pm):
     llm = LLMBridge()
     df = pm.df
     pm.stop_generation = False
@@ -620,52 +652,67 @@ def generate_concepts_logic(overarching_plot, prompt_template, llm_model, rough_
     if df.empty: 
         yield df, "Error: Timeline is empty."
         return
-
-    if specific_shot_id == "ALL":
-        mask = pd.Series(True, index=df.index)
-    elif specific_shot_id:
-        mask = (df['Shot_ID'].astype(str).str.upper() == str(specific_shot_id).upper())
-    else:
-        mask = (df['Video_Prompt'].isna() | (df['Video_Prompt'] == ""))
         
-    indices_to_process = df[mask].index.tolist()
-    
-    yield df, f"🚀 Starting generation for {len(indices_to_process)} shots..."
+    yield df, "⏳ LLM is thinking... (Check your LM Studio instance for progress)"
     time.sleep(0.1) 
     
-    for count, index in enumerate(indices_to_process, 1):
-        if pm.stop_generation: 
-            yield df, "🛑 Stopped. Waiting for current task to complete..."
-            break
-            
-        row = df.loc[index]
-        yield df, f"⏳ Generating ({count}/{len(indices_to_process)}): Prompts for {row['Shot_ID']}..."
+    lyrics = pm.get_lyrics()
+    shot_list_csv = df[['Shot_ID', 'Type', 'Duration', 'Total_Frames']].to_csv(index=False)
+    
+    user_prompt = BULK_PROMPT_TEMPLATE.format(
+        lyrics=lyrics if lyrics else "None provided.",
+        plot=overarching_plot if overarching_plot else rough_concept if rough_concept else "None provided.",
+        shot_list=shot_list_csv
+    )
+    
+    sys_prompt = "You are an expert AI video prompt generator. Only output valid CSV data."
+    
+    response = llm.query(sys_prompt, user_prompt, llm_model)
+    
+    if pm.stop_generation:
+        yield df, "🛑 Stopped."
+        return
         
-        if row['Type'] == 'Vocal':
-            final_vid_prompt = performance_desc
-        else:
-            loc_pos = df.index.get_loc(index)
-            if loc_pos > 0:
-                prev_index = df.index[loc_pos - 1]
-                prev_shot_text = df.loc[prev_index, 'Video_Prompt']
-                if pd.isna(prev_shot_text): prev_shot_text = "N/A"
-            else:
-                prev_shot_text = "None (Start of video)"
+    yield df, "⏳ Parsing CSV response..."
+    time.sleep(0.1)
 
-            filled_prompt = prompt_template.replace("{plot}", overarching_plot)\
-                .replace("{type}", row['Type'])\
-                .replace("{start}", f"{row['Start_Time']:.1f}")\
-                .replace("{duration}", f"{row['Duration']:.1f}")\
-                .replace("{prev_shot}", prev_shot_text)
-            
-            final_vid_prompt = llm.query(LTX_SYSTEM_PROMPT, filled_prompt, llm_model)
+    csv_text = response
+    if "```csv" in response:
+        csv_text = response.split("```csv")[1].split("```")[0].strip()
+    elif "```" in response:
+        csv_text = response.split("```")[1].split("```")[0].strip()
 
-        df.at[index, 'Video_Prompt'] = final_vid_prompt
+    try:
+        new_df = pd.read_csv(io.StringIO(csv_text))
+
+        if not all(col in new_df.columns for col in ["Shot_ID", "Type", "Video_Prompt"]):
+            yield df, "❌ Error: LLM returned malformed CSV missing required columns (Shot_ID, Type, Video_Prompt)."
+            print("LLM Response:\n", response)
+            return
+
+        for _, row in new_df.iterrows():
+            sid = str(row.get('Shot_ID', '')).strip()
+            prompt = str(row.get('Video_Prompt', '')).strip()
+
+            if pd.isna(prompt) or prompt.lower() == 'nan':
+                prompt = ""
+
+            match_idx = df.index[df['Shot_ID'].astype(str).str.upper() == sid.upper()].tolist()
+            if match_idx:
+                df.at[match_idx[0], 'Video_Prompt'] = prompt
+                
+        # Post-process to ensure Vocal shots always get the performance description at minimum
+        for index, row in df.iterrows():
+            if row['Type'] == 'Vocal':
+                 df.at[index, 'Video_Prompt'] = performance_desc
+
         pm.df = df
         pm.save_data()
-        
-    if not pm.stop_generation:
         yield df, "🎉 Concept Generation Complete!"
+
+    except Exception as e:
+        yield df, f"❌ Error parsing LLM CSV response: {str(e)}"
+        print("LLM Response:\n", response)
 
 def stop_gen(pm):
     pm.stop_generation = True
@@ -1115,19 +1162,20 @@ with gr.Blocks(title="Music Video AI Studio", theme=gr.themes.Default(), css=css
                 llm_dropdown.change(save_global_llm, inputs=[llm_dropdown])
             
             with gr.Row():
-                rough_concept_in = gr.Textbox(label="Rough User Concept / Vibe", placeholder="e.g. A cyberpunk rainstorm...", scale=2, lines=5)
+                rough_concept_in = gr.Textbox(label="Rough User Concept / Vibe (Optional)", placeholder="e.g. A cyberpunk rainstorm...", scale=2, lines=5)
                 with gr.Column(scale=1):
+                    singer_gender_in = gr.Textbox(label="Singer Gender (Optional)", placeholder="e.g. Female, Male, Non-binary (Leave blank to invent)", lines=1)
                     gen_performance_btn = gr.Button("Generate Singer, Band & Venue Desc")
                     performance_desc_in = gr.Textbox(label="Singer, Band, and Venue Description (Also used as Prompt for Vocal Shots)", placeholder="Short description of the singer, band, and venue setup", lines=2)
             
             gen_plot_btn = gr.Button("2. Generate Overarching Plot")
-            plot_out = gr.Textbox(label="Overarching Plot", lines=4, interactive=True)
+            plot_out = gr.Textbox(label="Overarching Plot (Optional)", lines=4, interactive=True)
             
-            with gr.Accordion("Advanced: Prompt Templates", open=False):
+            with gr.Accordion("Advanced: Single Prompt Fallback Template (Used in Tab 3)", open=False):
                 prompt_template_in = gr.Textbox(value=DEFAULT_CONCEPT_PROMPT, label="Action Shot Prompt Template", lines=4)
             
             with gr.Row():
-                gen_concepts_btn = gr.Button("3. Generate Video Prompts", variant="primary")
+                gen_concepts_btn = gr.Button("3. Generate Video Prompts (Bulk Generation)", variant="primary")
                 stop_concepts_btn = gr.Button("Stop Generation", variant="stop")
             
             concept_gen_status = gr.Textbox(label="Concept Generation Status", interactive=False)
@@ -1144,10 +1192,6 @@ with gr.Blocks(title="Music Video AI Studio", theme=gr.themes.Default(), css=css
                 import_csv_btn = gr.UploadButton("Import CSV (Update Prompts)", file_types=[".csv"])
                 import_status = gr.Textbox(label="Import Status", interactive=False)
 
-        with gr.Row():
-            regen_shot_id = gr.Textbox(label="Shot ID to Regenerate", placeholder="S005")
-            regen_single_btn = gr.Button("Regenerate Single Shot")
-            regen_all_btn = gr.Button("Regenerate All Shots")
         shot_table = gr.Dataframe(headers=REQUIRED_COLUMNS, interactive=True, wrap=True, type="pandas")
 
 # --- TAB 3: VIDEO GENERATION ---
@@ -1572,11 +1616,9 @@ All shot durations are automatically locked to LTX-compatible frame counts (1–
 2. Write a **rough concept** describing the vibe, setting, or mood of the video.
 3. Click *Generate Singer, Band & Venue Desc* to create a concise visual description of your performer(s). This is also used as the video prompt for all Vocal shots.
 4. Click *Generate Overarching Plot* to produce a cohesive linear narrative based on your concept and lyrics.
-5. Click *Generate Video Prompts* to fill in a cinematic prompt for every Action shot in sequence. The LLM uses the overarching plot and the previous shot's prompt to keep the story coherent.
+5. Click *Generate Video Prompts (Bulk Generation)* to send your entire timeline context, lyrics, and plots over to the LLM. It will return fully conceptualized, sequenced shot descriptions across all rows at once.
 
-Use *Regenerate Single Shot* (enter a Shot ID like `S005`) or *Regenerate All Shots* to redo specific prompts. Click *Stop Generation* to pause mid-batch — the current shot finishes before stopping.
-
-**Advanced — Prompt Templates:** Expand this section to customise the instruction sent to the LLM for each Action shot. The following placeholders are filled in automatically: `{plot}`, `{prev_shot}`, `{start}`, `{duration}`, `{type}`.
+**Advanced — Prompt Templates:** Expand this section to customise the fallback instruction sent to the LLM for each Action shot (this is utilized mainly when regenerating single shots in Tab 3). The following placeholders are filled in automatically: `{plot}`, `{prev_shot}`, `{start}`, `{duration}`, `{type}`.
 
 **Data Management:**
 - *Export CSV* — download the full shot list with all prompts for external editing
@@ -1829,13 +1871,11 @@ Click *Save Settings* to apply immediately. Settings are stored globally in `glo
 
     scan_btn.click(run_scan, inputs=[vocals_up, current_proj_var, min_silence_sl, silence_thresh_sl, shot_mode_drp, min_shot_dur, max_shot_dur, pm_state], outputs=[scan_status, shot_table])
     
-    gen_performance_btn.click(generate_performance_description, inputs=[rough_concept_in, plot_out, llm_dropdown], outputs=performance_desc_in)
+    gen_performance_btn.click(generate_performance_description, inputs=[rough_concept_in, plot_out, singer_gender_in, llm_dropdown], outputs=performance_desc_in)
     gen_plot_btn.click(generate_overarching_plot, inputs=[rough_concept_in, lyrics_in, llm_dropdown, pm_state], outputs=plot_out)
     
-    gen_concepts_btn.click(generate_concepts_logic, inputs=[plot_out, prompt_template_in, llm_dropdown, rough_concept_in, performance_desc_in, gr.State(None), pm_state], outputs=[shot_table, concept_gen_status])
+    gen_concepts_btn.click(generate_concepts_logic, inputs=[plot_out, llm_dropdown, rough_concept_in, performance_desc_in, pm_state], outputs=[shot_table, concept_gen_status])
     stop_concepts_btn.click(stop_gen, inputs=[pm_state], outputs=[concept_gen_status]) 
-    regen_single_btn.click(generate_concepts_logic, inputs=[plot_out, prompt_template_in, llm_dropdown, rough_concept_in, performance_desc_in, regen_shot_id, pm_state], outputs=[shot_table, concept_gen_status])
-    regen_all_btn.click(generate_concepts_logic, inputs=[plot_out, prompt_template_in, llm_dropdown, rough_concept_in, performance_desc_in, gr.State("ALL"), pm_state], outputs=[shot_table, concept_gen_status])
 
     # Dynamic UI Refresh Event
     tab2_ui.select(lambda pm: pm.df, inputs=[pm_state], outputs=[shot_table])

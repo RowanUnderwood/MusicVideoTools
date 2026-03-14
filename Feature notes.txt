@@ -1,7 +1,3 @@
-Add the following features and fix the bugs in the application.  Provide the completed code.
+Add the following features:
 
-When you select tab 4 can it automatically sync directory and update shot list instead of needing a separate button?  Also, it may need to sync again when a shot is moved to cutting room floor?
-
-Check for a bug when the user manually updates the video prompt in tab 2 then switches to tab 3 to regenerate a video - the new prompt is not saved. 
-
-In the "single shot generation" tool on tab 3 - display the current video prompt after a shot is selected in the drop down.  The video prompt for the selected shot should be in an editable field that also updates the prompt on tab 2.
+When there are already videos available in the "renders" directory for a project, keep track of these, and show thumbnails and allow the user to play them from the bottom of tab 4.
