@@ -80,6 +80,69 @@ LTX_SYSTEM_PROMPT = """You are an expert cinematography AI director writing vide
 9. Camera focus: When describing camera movement, focus on the camera’s relationship to the subject.
 10. Length: Write 4 to 8 descriptive sentences to cover all key aspects."""
 
+SCRIPTED_PROMPT_TEMPLATE = """Create a short narrative film via AI video prompts while adhering to the following main character, gender, settings, and rough concept.  See also the following csv shot list with durations and frame counts.  Return the shot list csv data with each "Video_Prompt" field filled out. include the Shot_ID and Type fields for these rows.  Do NOT include any other text in your reply.  Enclose the video prompt column in "" to prevent any commas inside the video prompt from corrupting the data.
+Follow the ltx prompt guide below to create each "action" prompt, but keep in mind that any recuring characters, objects, or locations in the story must be fully described in each prompt as the video model will have no knowledge of what came before.  Give each character a name and refer to them by name in the prompt along with their descriptions.  It is CRITICAL that we have a description of the character's build, face, hair, and clothing in EACH prompt to keep them consistent between shots.
+1. Establish the Shot
+Use cinematography terms that match your intended genre. Include shot scale or category-specific characteristics to refine the visual style.
+2. Set the Scene
+Describe lighting conditions, color palette, surface textures, and atmosphere to establish mood and tone.
+3. Describe the Action
+Write the core action as a natural sequence, flowing clearly from beginning to end.
+4. Define the Character(s)
+Include age, hairstyle, clothing, and distinguishing features. Express emotion through physical cues, not abstract labels.
+5. Identify Camera Movement(s)
+Specify how and when the camera moves. Describing how subjects appear after the movement helps the model complete the motion accurately.
+6. Describe the Audio
+Clearly describe ambient sound, music, speech, or singing.
+Place spoken dialogue in quotation marks
+Specify language and accent if needed
+For Best Results
+Write your prompt as a single flowing paragraph
+Use present tense verbs for action and movement
+Match the level of detail to the shot scale
+(close-ups need more detail than wide shots)
+Describe camera movement relative to the subject
+Aim for 4-8 descriptive sentences
+
+Main Character's Gender: {gender}
+Main Character and Setting Description: {character_desc}
+Rough Concept: {concept}
+
+Shot list:
+{shot_list}"""
+
+ALL_VOCALS_PROMPT_TEMPLATE = """Create a music video via AI video prompts for the following song (see song lyrics below).  See the attached CSV formatted shot list with durations and frame counts. Every shot in this video is a vocal/performance shot. Create detailed, visually compelling prompts for each shot that combine performance elements with creative visual storytelling aligned to the song's themes. Do not include any guns in the story as the LTX video model censors them.  Do not use any words in your descriptions like, painted, sketched, or drawn to prevent the video model from creating animated shots.  Return the shot list in CSV format with just the "Shot_ID", "Type" and "Video_Prompt" columns.  Do NOT include any other text in your reply.  Enclose the video prompt column in "" to prevent any commas inside the video prompt from corrupting the data.
+
+Follow the ltx prompt guide below to create each prompt, but keep in mind that any recuring characters, objects, or locations in the story must be fully described in each prompt as the video model will have no knowledge of what came before.  Give each character a name and refer to them by name in the prompt along with their descriptions.  It is CRITICAL that we have a description of the character's build, face, hair, and clothing in EACH prompt to keep them consistent between shots.
+
+Establish the shot. Use cinematography terms that match your preferred film genre. Include aspects like scale or specific category characteristics to further refine the style you're looking for.
+
+Set the scene. Describe lighting conditions, color palette, surface textures, and atmosphere to shape the mood.
+
+Describe the action. Write the core action as a natural sequence, flowing from beginning to end.
+
+Define your character(s). Include age, hairstyle, clothing, and distinguishing details. Express emotions through physical cues.
+
+Identify camera movement(s). Specify when the view should shift and how. Including how subjects or objects appear after the camera motion gives the model a better idea of how to finish the motion.
+
+Keep your prompt in a single flowing paragraph to give the model a cohesive scene to work with.
+Use present tense verbs to describe movement and action.
+Match your detail to the shot scale. Closeups need more precise detail than wide shots.
+When describing camera movement, focus on the camera's relationship to the subject.
+You should expect to write 4 to 8 descriptive sentences to cover all the key aspects of the prompt.
+
+Song Lyrics:
+{lyrics}
+
+User suggested plot concept:
+{plot}
+
+Singer/Band/Venue Description:
+{performance_desc}
+
+Shot list:
+{shot_list}"""
+
 BULK_PROMPT_TEMPLATE = """Create a music video via AI video prompts for the following song (see song lyrics below).  See the attached CSV formatted shot list with durations and frame counts. We need to tell a coherent story using the shots labeled "Action" in the type column.  Align your story loosely to the themes and metaphors present in the song's lyrics, or the user suggested plot concept (if present), but do not be afraid to get creative! Do not include any guns in the story as the LTX video model censors them.  Do not use any words in your descriptions like, painted, sketched, or drawn to prevent the video model from creating animated shots.  Return the shot list in CSV format with just the "Shot_ID", "Type" and "Video_Prompt" columns.  Leave the "Vocal" type rows video prompts blank, but include the Shot_ID and Type fields for these rows.  Do NOT include any other text in your reply.  Enclose the video prompt column in "" to prevent any commas inside the video prompt from corrupting the data.
 
 Follow the ltx prompt guide below to create each "action" prompt, but keep in mind that any recuring characters, objects, or locations in the story must be fully described in each prompt as the video model will have no knowledge of what came before.  Give each character a name and refer to them by name in the prompt along with their descriptions.  It is CRITICAL that we have a description of the character's build, face, hair, and clothing in EACH prompt to keep them consistent between shots.
@@ -610,11 +673,92 @@ def scan_vocals_advanced(vocals_file_path, project_name, min_silence, silence_th
     pm.save_data()
     return pm.df
 
-def generate_overarching_plot(concept, lyrics, llm_model, pm):
+def build_simple_timeline(total_duration, shot_type, shot_mode, min_dur, max_dur, pm):
+    """Build a timeline of uniform shot type (all Vocal or all Action) without silence scanning."""
+    new_rows = []
+    current_cursor = 0.0
+    shot_counter = 1
+    fps = 24.0
+    MIN_LTX_DUR = get_ltx_duration(1.0, fps)
+
+    def create_row(sType, start, end, current_count):
+        dur = end - start
+        start_frame = round(start * fps)
+        end_frame = round(end * fps)
+        total_frames = end_frame - start_frame
+        return {
+            "Shot_ID": f"S{current_count:03d}",
+            "Type": sType,
+            "Start_Time": float(f"{start:.4f}"),
+            "End_Time": float(f"{end:.4f}"),
+            "Duration": float(f"{dur:.4f}"),
+            "Start_Frame": int(start_frame),
+            "End_Frame": int(end_frame),
+            "Total_Frames": int(total_frames),
+            "Status": "Pending"
+        }
+
+    remaining_time = total_duration - current_cursor
+    while remaining_time >= MIN_LTX_DUR:
+        max_safe_int = int(math.floor(remaining_time))
+        if max_safe_int < 1:
+            break
+
+        chosen_raw = min_dur if shot_mode == "Fixed" else random.uniform(min_dur, max_dur)
+        chosen_int = int(math.ceil(chosen_raw))
+
+        if chosen_int > max_safe_int:
+            chosen_int = max_safe_int
+        if chosen_int > 5:
+            chosen_int = 5
+
+        actual_dur = get_ltx_duration(chosen_int, fps)
+        if actual_dur > remaining_time:
+            break
+
+        new_rows.append(create_row(shot_type, current_cursor, current_cursor + actual_dur, shot_counter))
+        shot_counter += 1
+        current_cursor += actual_dur
+        remaining_time = total_duration - current_cursor
+
+    # Handle remaining time
+    if remaining_time > 0.1:
+        chosen_int = max(1, min(int(math.ceil(remaining_time)), 5))
+        actual_dur = get_ltx_duration(chosen_int, fps)
+        new_rows.append(create_row(shot_type, current_cursor, current_cursor + actual_dur, shot_counter))
+
+    new_df = pd.DataFrame(new_rows)
+    for col in REQUIRED_COLUMNS:
+        if col not in new_df.columns:
+            new_df[col] = ""
+
+    pm.df = new_df
+    pm.save_data()
+    return pm.df
+
+def generate_overarching_plot(concept, lyrics, llm_model, pm, video_mode="Intercut"):
     yield "⏳ Generating overarching plot... (Please wait)"
     llm = LLMBridge()
     df = pm.df
-    if df.empty: 
+
+    if video_mode == "Scripted":
+        # Scripted mode: use concept/character info, no lyrics needed, timeline optional
+        sys_prompt = "You are a creative writer for short narrative films."
+        user_prompt = (
+            f"Rough Concept: {concept}\n\n"
+            "Task: Write a cohesive linear plot summary for this short narrative film (max 300 words). "
+            "Focus on character arcs, settings, and dramatic moments."
+        )
+        if not df.empty:
+            timeline_str = ""
+            for idx, row in df.iterrows():
+                timeline_str += f"[{row['Start_Time']:.2f}s - {row['End_Time']:.2f}s: Shot]\n"
+            user_prompt += f"\n\nTimeline:\n{timeline_str}"
+        yield llm.query(sys_prompt, user_prompt, llm_model)
+        return
+
+    # Music video modes (Intercut, All Vocals, All Action)
+    if df.empty:
         yield "Error: Timeline is empty."
         return
 
@@ -622,7 +766,7 @@ def generate_overarching_plot(concept, lyrics, llm_model, pm):
     for idx, row in df.iterrows():
         if row['Type'] == 'Vocal':
             timeline_str += f"[{row['Start_Time']:.2f}s - {row['End_Time']:.2f}s: SINGING]\n"
-    
+
     sys_prompt = "You are a creative writer for music videos."
     user_prompt = (
         f"Rough Concept: {concept}\n\nLyrics:\n{lyrics}\n\nTimeline:\n{timeline_str}\n\n"
@@ -630,9 +774,22 @@ def generate_overarching_plot(concept, lyrics, llm_model, pm):
     )
     yield llm.query(sys_prompt, user_prompt, llm_model)
 
-def generate_performance_description(concept, plot, gender, llm_model):
-    yield "⏳ Generating performance description... (Please wait)"
+def generate_performance_description(concept, plot, gender, llm_model, video_mode="Intercut"):
+    yield "⏳ Generating description... (Please wait)"
     llm = LLMBridge()
+
+    if video_mode == "Scripted":
+        sys_prompt = "You are a casting director and set designer for short films."
+        gender_instruction = f"Main Character's Gender: {gender}\n" if gender and gender.strip() else "Main Character's Gender: Please invent a gender.\n"
+        user_prompt = (
+            f"Concept: {concept}\nPlot: {plot}\n{gender_instruction}\n"
+            "Task: Describe the main character's physical appearance, style, and the primary setting/location, "
+            "specifically for an AI video generation model. Include build, face, hair, clothing, and setting details. "
+            "Keep it concise (3-4 sentences)."
+        )
+        yield llm.query(sys_prompt, user_prompt, llm_model)
+        return
+
     sys_prompt = "You are a casting director and set designer."
     
     gender_instruction = f"Singer Gender: {gender}\n" if gender and gender.strip() else "Singer Gender: Please invent a gender for the singer.\n"
@@ -644,35 +801,51 @@ def generate_performance_description(concept, plot, gender, llm_model):
     )
     yield llm.query(sys_prompt, user_prompt, llm_model)
 
-def generate_concepts_logic(overarching_plot, llm_model, rough_concept, performance_desc, pm):
+def generate_concepts_logic(overarching_plot, llm_model, rough_concept, performance_desc, pm, video_mode="Intercut", gender=""):
     llm = LLMBridge()
     df = pm.df
     pm.stop_generation = False
-    
-    if df.empty: 
+
+    if df.empty:
         yield df, "Error: Timeline is empty."
         return
-        
+
     yield df, "⏳ LLM is thinking... (Check your LM Studio instance for progress)"
-    time.sleep(0.1) 
-    
-    lyrics = pm.get_lyrics()
+    time.sleep(0.1)
+
     shot_list_csv = df[['Shot_ID', 'Type', 'Duration', 'Total_Frames']].to_csv(index=False)
-    
-    user_prompt = BULK_PROMPT_TEMPLATE.format(
-        lyrics=lyrics if lyrics else "None provided.",
-        plot=overarching_plot if overarching_plot else rough_concept if rough_concept else "None provided.",
-        shot_list=shot_list_csv
-    )
-    
     sys_prompt = "You are an expert AI video prompt generator. Only output valid CSV data."
-    
+
+    if video_mode == "Scripted":
+        user_prompt = SCRIPTED_PROMPT_TEMPLATE.format(
+            gender=gender if gender and gender.strip() else "Not specified",
+            character_desc=performance_desc if performance_desc else "Not specified",
+            concept=overarching_plot if overarching_plot else rough_concept if rough_concept else "None provided.",
+            shot_list=shot_list_csv
+        )
+    elif video_mode == "All Vocals":
+        lyrics = pm.get_lyrics()
+        user_prompt = ALL_VOCALS_PROMPT_TEMPLATE.format(
+            lyrics=lyrics if lyrics else "None provided.",
+            plot=overarching_plot if overarching_plot else rough_concept if rough_concept else "None provided.",
+            performance_desc=performance_desc if performance_desc else "Not specified.",
+            shot_list=shot_list_csv
+        )
+    else:
+        # Intercut and All Action use the standard bulk template
+        lyrics = pm.get_lyrics()
+        user_prompt = BULK_PROMPT_TEMPLATE.format(
+            lyrics=lyrics if lyrics else "None provided.",
+            plot=overarching_plot if overarching_plot else rough_concept if rough_concept else "None provided.",
+            shot_list=shot_list_csv
+        )
+
     response = llm.query(sys_prompt, user_prompt, llm_model)
-    
+
     if pm.stop_generation:
         yield df, "🛑 Stopped."
         return
-        
+
     yield df, "⏳ Parsing CSV response..."
     time.sleep(0.1)
 
@@ -700,11 +873,14 @@ def generate_concepts_logic(overarching_plot, llm_model, rough_concept, performa
             match_idx = df.index[df['Shot_ID'].astype(str).str.upper() == sid.upper()].tolist()
             if match_idx:
                 df.at[match_idx[0], 'Video_Prompt'] = prompt
-                
-        # Post-process to ensure Vocal shots always get the performance description at minimum
-        for index, row in df.iterrows():
-            if row['Type'] == 'Vocal':
-                 df.at[index, 'Video_Prompt'] = performance_desc
+
+        # Post-process: In Intercut mode, override Vocal shots with performance description
+        # In All Vocals mode, keep the LLM-generated prompts for all shots
+        # In Scripted/All Action modes, all shots are Action type so this doesn't apply
+        if video_mode == "Intercut":
+            for index, row in df.iterrows():
+                if row['Type'] == 'Vocal':
+                    df.at[index, 'Video_Prompt'] = performance_desc
 
         pm.df = df
         pm.save_data()
@@ -739,6 +915,41 @@ def generate_story_file(pm):
 # ==========================================
 # LOGIC: VIDEO GENERATION (LTX)
 # ==========================================
+
+def get_project_renders(pm):
+    """Get list of rendered final videos with thumbnails for gallery display."""
+    if not pm.current_project:
+        return [], []
+
+    renders_dir = pm.get_path("renders")
+    if not os.path.exists(renders_dir):
+        return [], []
+
+    files = sorted(glob.glob(os.path.join(renders_dir, "*.mp4")), key=os.path.getmtime, reverse=True)
+    if not files:
+        return [], []
+
+    gallery_data = []
+    render_paths = []
+    for f in files:
+        fname = os.path.basename(f)
+        render_paths.append(f)
+        # Try to extract a thumbnail frame using ffmpeg
+        try:
+            thumb_path = os.path.join(renders_dir, f".thumb_{fname}.jpg")
+            if not os.path.exists(thumb_path):
+                subprocess.run(
+                    ["ffmpeg", "-y", "-i", f, "-ss", "1", "-vframes", "1", "-q:v", "5", thumb_path],
+                    capture_output=True, timeout=10
+                )
+            if os.path.exists(thumb_path):
+                gallery_data.append((thumb_path, fname))
+            else:
+                gallery_data.append((None, fname))
+        except Exception:
+            gallery_data.append((None, fname))
+
+    return gallery_data, render_paths
 
 def get_project_videos(pm, project_name=None):
     proj = project_name if project_name else pm.current_project
@@ -842,30 +1053,33 @@ def generate_video_for_shot(shot_id, resolution, vocal_mode, pm):
     }
 
     if row['Type'] == "Vocal":
+        # Try vocals.mp3 first, fall back to full_song.mp3 (needed for All Vocals mode)
         vocals_path = pm.get_asset_path_if_exists("vocals.mp3")
         if not vocals_path:
-            yield None, "Error: Missing vocals file for vocal shot."
+            vocals_path = pm.get_asset_path_if_exists("full_song.mp3")
+        if not vocals_path:
+            yield None, "Error: Missing audio file for vocal shot. Upload a vocals or full song file."
             return
 
         try:
             audio = AudioSegment.from_file(vocals_path)
             start_ms = round(float(row['Start_Time']) * 1000)
             end_ms = round(float(row['End_Time']) * 1000)
-            
+
             chunk = audio[start_ms : end_ms]
-            
+
             expected_len_ms = end_ms - start_ms
             if len(chunk) < expected_len_ms:
                 deficit = expected_len_ms - len(chunk)
                 silence_pad = AudioSegment.silent(duration=deficit)
                 chunk = chunk + silence_pad
-                
+
             chunk_path = os.path.join(pm.get_path("audio_chunks"), f"{shot_id}_audio.mp3")
             chunk.export(chunk_path, format="mp3")
-            
+
             payload["audio"] = "true"
             payload["audioPath"] = os.path.abspath(chunk_path)
-            
+
         except Exception as e:
             print(f"❌ AUDIO ERROR for {shot_id}: {e}")
             yield None, f"Error processing audio: {str(e)}"
@@ -1104,10 +1318,10 @@ css = """
 }
 """
 
-with gr.Blocks(title="Music Video AI Studio", theme=gr.themes.Default(), css=css) as app:
+with gr.Blocks(title="Synesthesia AI Video Director", theme=gr.themes.Default(), css=css) as app:
     pm_state = gr.State(ProjectManager()) 
     
-    gr.Markdown("# 🎬 AI Music Video Director (LTX Engine)")
+    gr.Markdown("# 🎬 Synesthesia AI Video Director")
     current_proj_var = gr.State("")
     
 # --- TAB 1: SETUP ---
@@ -1139,12 +1353,18 @@ with gr.Blocks(title="Music Video AI Studio", theme=gr.themes.Default(), css=css
     with gr.Tab("2. Storyboard") as tab2_ui:
         with gr.Accordion("Step 1: Timeline Settings", open=True):
             with gr.Row():
+                video_mode_drp = gr.Dropdown(["Intercut", "All Vocals", "All Action", "Scripted"], value="Intercut", label="Mode")
+            with gr.Row():
                 min_silence_sl = gr.Slider(500, 2000, value=700, label="Min Silence (ms)")
                 silence_thresh_sl = gr.Slider(-60, -20, value=-45, label="Silence Threshold (dB)")
             with gr.Row():
-                shot_mode_drp = gr.Dropdown(["Fixed", "Random"], value="Random", label="Action Shot Mode")
+                shot_mode_drp = gr.Dropdown(["Fixed", "Random"], value="Random", label="Shot Duration Mode")
                 min_shot_dur = gr.Slider(1, 5, value=2, label="Min Duration (s)")
                 max_shot_dur = gr.Slider(1, 5, value=4, label="Max Duration (s)")
+            with gr.Row(visible=False) as scripted_duration_row:
+                scripted_total_dur = gr.Number(label="Total Duration (seconds)", value=60, precision=0)
+                scripted_shot_count = gr.Number(label="Number of Shots (alternative)", value=0, precision=0)
+                gr.Markdown("*Specify total duration OR shot count. If both > 0, total duration takes priority.*")
             with gr.Row():
                 scan_btn = gr.Button("1. Scan Vocals & Build Timeline", variant="primary")
                 scan_status = gr.Textbox(label="Build Status", interactive=False)
@@ -1453,18 +1673,54 @@ with gr.Blocks(title="Music Video AI Studio", theme=gr.themes.Default(), css=css
             assemble_btn = gr.Button("Assemble Final Video (Strictly Videos)", variant="secondary")
             assemble_current_btn = gr.Button("Assemble with Current Assets (Videos > Black Fallback)", variant="primary")
         final_video_out = gr.Video(label="Final Cut")
-        
+
+        gr.Markdown("---")
+        gr.Markdown("### Previous Renders")
+        renders_gallery = gr.Gallery(label="Rendered Videos", columns=4, height="auto", allow_preview=False)
+        renders_state = gr.State([])  # stores render file paths
+        with gr.Row():
+            render_select_dropdown = gr.Dropdown(label="Select Render to Play", choices=[], interactive=True)
+        render_playback = gr.Video(label="Render Playback", interactive=False)
+
+        def refresh_renders(pm):
+            gallery_data, render_paths = get_project_renders(pm)
+            choices = [os.path.basename(p) for p in render_paths]
+            return gallery_data, render_paths, gr.update(choices=choices, value=None), None
+
+        def play_selected_render(selected_name, render_paths):
+            if not selected_name or not render_paths:
+                return None
+            for p in render_paths:
+                if os.path.basename(p) == selected_name:
+                    return p
+            return None
+
+        render_select_dropdown.change(play_selected_render, inputs=[render_select_dropdown, renders_state], outputs=[render_playback])
+
+        def on_render_gallery_select(evt: gr.SelectData, render_paths):
+            if evt.index is not None and evt.index < len(render_paths):
+                path = render_paths[evt.index]
+                return path, os.path.basename(path)
+            return None, gr.update()
+
+        renders_gallery.select(on_render_gallery_select, inputs=[renders_state], outputs=[render_playback, render_select_dropdown])
+
         # --- Tab 4 Logic Wiring ---
         def manual_sync_and_get_choices(pm, progress=gr.Progress()):
             progress(0, desc="Syncing Video Directory...")
             sync_video_directory(pm)
             progress(0.8, desc="Updating Shot List...")
-            if pm.df.empty: return gr.update(choices=[]), pm.df
-            choices = pm.df[pm.df["All_Video_Paths"] != ""]["Shot_ID"].dropna().unique().tolist()
+            if pm.df.empty:
+                choices = []
+            else:
+                choices = pm.df[pm.df["All_Video_Paths"] != ""]["Shot_ID"].dropna().unique().tolist()
+            progress(0.9, desc="Loading renders...")
+            gallery_data, render_paths = get_project_renders(pm)
+            render_choices = [os.path.basename(p) for p in render_paths]
             progress(1.0, desc="Complete!")
-            return gr.update(choices=choices), pm.df
+            return gr.update(choices=choices), pm.df, gallery_data, render_paths, gr.update(choices=render_choices, value=None)
 
-        tab4_ui.select(manual_sync_and_get_choices, inputs=[pm_state], outputs=[compare_shot_dropdown, shot_table])
+        tab4_ui.select(manual_sync_and_get_choices, inputs=[pm_state], outputs=[compare_shot_dropdown, shot_table, renders_gallery, renders_state, render_select_dropdown])
         
         # Next shot cycling logic
         def get_next_shot(current_shot, pm):
@@ -1555,8 +1811,14 @@ with gr.Blocks(title="Music Video AI Studio", theme=gr.themes.Default(), css=css
             compare_set_btns[i].click(set_active_video, inputs=[compare_paths[i], compare_shot_dropdown, pm_state], outputs=compare_cols + compare_vids + compare_paths)
             compare_cut_btns[i].click(move_to_cutting_room, inputs=[compare_paths[i], compare_shot_dropdown, pm_state], outputs=[compare_shot_dropdown] + compare_cols + compare_vids + compare_paths)
         
-        assemble_btn.click(lambda s, res, pm: assemble_video(get_file_path(s), res, pm, fallback_mode=False), inputs=[song_up, vid_resolution_dropdown, pm_state], outputs=[final_video_out])
-        assemble_current_btn.click(lambda s, res, pm: assemble_video(get_file_path(s), res, pm, fallback_mode=True), inputs=[song_up, vid_resolution_dropdown, pm_state], outputs=[final_video_out])
+        def assemble_and_refresh(song_file, resolution, pm, fallback_mode):
+            result = assemble_video(get_file_path(song_file), resolution, pm, fallback_mode=fallback_mode)
+            gallery_data, render_paths = get_project_renders(pm)
+            render_choices = [os.path.basename(p) for p in render_paths]
+            return result, gallery_data, render_paths, gr.update(choices=render_choices, value=None)
+
+        assemble_btn.click(lambda s, res, pm: assemble_and_refresh(s, res, pm, False), inputs=[song_up, vid_resolution_dropdown, pm_state], outputs=[final_video_out, renders_gallery, renders_state, render_select_dropdown])
+        assemble_current_btn.click(lambda s, res, pm: assemble_and_refresh(s, res, pm, True), inputs=[song_up, vid_resolution_dropdown, pm_state], outputs=[final_video_out, renders_gallery, renders_state, render_select_dropdown])
 
 # --- TAB 5: SETTINGS ---
     with gr.Tab("5. Settings"):
@@ -1738,20 +2000,34 @@ Click *Save Settings* to apply immediately. Settings are stored globally in `glo
         v_path = pm.get_asset_path_if_exists("vocals.mp3")
         s_path = pm.get_asset_path_if_exists("full_song.mp3")
         settings = pm.load_project_settings()
-        
+
         gal_vids = get_project_videos(pm, name)
         time_str = format_time(pm.total_time_spent)
-        
+
+        loaded_mode = settings.get("video_mode", "Intercut")
+        is_scripted = (loaded_mode == "Scripted")
+        is_intercut = (loaded_mode == "Intercut")
+
         return (
-            msg, time_str, df, lyrics, v_path, s_path, 
-            settings.get("min_silence", 700), settings.get("silence_thresh", -45), 
+            msg, time_str, df, lyrics, v_path, s_path,
+            settings.get("min_silence", 700), settings.get("silence_thresh", -45),
             settings.get("shot_mode", "Random"), settings.get("min_dur", 2), settings.get("max_dur", 4),
-            settings.get("llm_model", "qwen3-vl-8b-instruct-abliterated-v2.0"), settings.get("rough_concept", ""), 
-            settings.get("plot", ""), 
+            settings.get("llm_model", "qwen3-vl-8b-instruct-abliterated-v2.0"), settings.get("rough_concept", ""),
+            settings.get("plot", ""),
             settings.get("prompt_template", DEFAULT_CONCEPT_PROMPT),
-            settings.get("performance_desc", ""), 
+            settings.get("performance_desc", ""),
             name,
-            gal_vids, gr.update(value="Start Batch Generation", variant="primary")
+            gal_vids, gr.update(value="Start Batch Generation", variant="primary"),
+            loaded_mode,
+            settings.get("scripted_total_dur", 60),
+            settings.get("scripted_shot_count", 0),
+            gr.update(visible=is_intercut),  # min_silence_sl
+            gr.update(visible=is_intercut),  # silence_thresh_sl
+            gr.update(visible=is_scripted),  # scripted_duration_row
+            gr.update(value="1. Build Timeline" if not is_intercut else "1. Scan Vocals & Build Timeline"),  # scan_btn
+            gr.update(label="Main Character's Gender (Optional)" if is_scripted else "Singer Gender (Optional)"),  # singer_gender_in
+            gr.update(label="Main Character and Setting Description" if is_scripted else "Singer, Band, and Venue Description (Also used as Prompt for Vocal Shots)"),  # performance_desc_in
+            gr.update(value="Generate Main Character & Setting Desc" if is_scripted else "Generate Singer, Band & Venue Desc"),  # gen_performance_btn
         )
 
     def handle_delete_project(name, pm):
@@ -1780,14 +2056,16 @@ Click *Save Settings* to apply immediately. Settings are stored globally in `glo
             if v_src: pm.save_asset(v_src, "vocals.mp3")
             if s_src: pm.save_asset(s_src, "full_song.mp3")
 
-    def auto_save_tab2(proj_name, min_sil, sil_thresh, mode, min_d, max_d, llm, concept, plot, template, performance_d, pm):
+    def auto_save_tab2(proj_name, min_sil, sil_thresh, mode, min_d, max_d, llm, concept, plot, template, performance_d, video_mode, s_total_dur, s_shot_count, pm):
         if proj_name:
             pm.current_project = proj_name
             settings = {
                 "min_silence": min_sil, "silence_thresh": sil_thresh, "shot_mode": mode,
                 "min_dur": min_d, "max_dur": max_d, "llm_model": llm,
                 "rough_concept": concept, "plot": plot, "prompt_template": template,
-                "performance_desc": performance_d
+                "performance_desc": performance_d,
+                "video_mode": video_mode,
+                "scripted_total_dur": s_total_dur, "scripted_shot_count": s_shot_count
             }
             pm.save_project_settings(settings)
 
@@ -1800,15 +2078,18 @@ Click *Save Settings* to apply immediately. Settings are stored globally in `glo
     )
 
     load_btn.click(
-        handle_load, 
-        inputs=[project_dropdown, pm_state], 
+        handle_load,
+        inputs=[project_dropdown, pm_state],
         outputs=[
-            proj_status, time_spent_disp, shot_table, lyrics_in, vocals_up, song_up, 
+            proj_status, time_spent_disp, shot_table, lyrics_in, vocals_up, song_up,
             min_silence_sl, silence_thresh_sl, shot_mode_drp, min_shot_dur, max_shot_dur,
-            llm_dropdown, rough_concept_in, plot_out, prompt_template_in, 
+            llm_dropdown, rough_concept_in, plot_out, prompt_template_in,
             performance_desc_in,
             current_proj_var,
-            vid_gallery, vid_gen_start_btn 
+            vid_gallery, vid_gen_start_btn,
+            video_mode_drp, scripted_total_dur, scripted_shot_count,
+            min_silence_sl, silence_thresh_sl, scripted_duration_row, scan_btn,
+            singer_gender_in, performance_desc_in, gen_performance_btn
         ]
     )
 
@@ -1820,13 +2101,47 @@ Click *Save Settings* to apply immediately. Settings are stored globally in `glo
         file_comp.upload(auto_save_files, inputs=[current_proj_var, vocals_up, song_up, pm_state])
         file_comp.clear(auto_save_files, inputs=[current_proj_var, vocals_up, song_up, pm_state])
         
-    t2_inputs = [current_proj_var, min_silence_sl, silence_thresh_sl, shot_mode_drp, min_shot_dur, max_shot_dur, llm_dropdown, rough_concept_in, plot_out, prompt_template_in, performance_desc_in, pm_state]
-    
-    for tab2_comp in [min_silence_sl, silence_thresh_sl, shot_mode_drp, min_shot_dur, max_shot_dur, llm_dropdown]:
+    t2_inputs = [current_proj_var, min_silence_sl, silence_thresh_sl, shot_mode_drp, min_shot_dur, max_shot_dur, llm_dropdown, rough_concept_in, plot_out, prompt_template_in, performance_desc_in, video_mode_drp, scripted_total_dur, scripted_shot_count, pm_state]
+
+    for tab2_comp in [min_silence_sl, silence_thresh_sl, shot_mode_drp, min_shot_dur, max_shot_dur, llm_dropdown, video_mode_drp, scripted_total_dur, scripted_shot_count]:
         tab2_comp.change(auto_save_tab2, inputs=t2_inputs)
-        
+
     for tab2_text_comp in [rough_concept_in, plot_out, prompt_template_in, performance_desc_in]:
         tab2_text_comp.blur(auto_save_tab2, inputs=t2_inputs)
+
+    def on_mode_change(mode):
+        is_scripted = (mode == "Scripted")
+        is_intercut = (mode == "Intercut")
+
+        # Silence settings only visible in Intercut mode
+        silence_vis = gr.update(visible=is_intercut)
+
+        # Scripted duration row only visible in Scripted mode
+        scripted_vis = gr.update(visible=is_scripted)
+
+        # Scan button label
+        if is_scripted:
+            scan_label = gr.update(value="1. Build Timeline")
+        else:
+            scan_label = gr.update(value="1. Scan Vocals & Build Timeline") if is_intercut else gr.update(value="1. Build Timeline")
+
+        # Label changes for scripted mode
+        if is_scripted:
+            gender_label = gr.update(label="Main Character's Gender (Optional)")
+            perf_label = gr.update(label="Main Character and Setting Description")
+            perf_btn_label = gr.update(value="Generate Main Character & Setting Desc")
+        else:
+            gender_label = gr.update(label="Singer Gender (Optional)")
+            perf_label = gr.update(label="Singer, Band, and Venue Description (Also used as Prompt for Vocal Shots)")
+            perf_btn_label = gr.update(value="Generate Singer, Band & Venue Desc")
+
+        return [silence_vis, silence_vis, scripted_vis, scan_label, gender_label, perf_label, perf_btn_label]
+
+    video_mode_drp.change(
+        on_mode_change,
+        inputs=[video_mode_drp],
+        outputs=[min_silence_sl, silence_thresh_sl, scripted_duration_row, scan_btn, singer_gender_in, performance_desc_in, gen_performance_btn]
+    )
         
     export_csv_btn.click(lambda pm: pm.export_csv(), inputs=[pm_state], outputs=csv_downloader)
     import_csv_btn.upload(lambda f, pm: pm.import_csv(f), inputs=[import_csv_btn, pm_state], outputs=[import_status, shot_table])
@@ -1848,33 +2163,66 @@ Click *Save Settings* to apply immediately. Settings are stored globally in `glo
 
     refresh_llm_btn.click(lambda: gr.update(choices=LLMBridge().get_models()), outputs=llm_dropdown)
     
-    def run_scan(v_file, p_name, m_sil, s_thr, s_mode, min_d, max_d, pm):
+    def run_scan(v_file, p_name, m_sil, s_thr, s_mode, min_d, max_d, v_mode, s_total_dur, s_shot_count, pm):
         yield "⏳ Initializing...", pm.df
-        if not p_name: 
+        if not p_name:
             yield "❌ Error: No project selected.", pm.df
             return
         pm.current_project = p_name
-        
-        final_v_path = get_file_path(v_file) or pm.get_asset_path_if_exists("vocals.mp3")
-        
-        if not final_v_path or not os.path.exists(final_v_path):
-             yield "❌ Error: No vocals file found.", pm.df
-             return
-             
-        yield "⏳ Detecting silence and building timeline (this may take a moment)...", pm.df
-        df = scan_vocals_advanced(final_v_path, p_name, m_sil, s_thr, s_mode, min_d, max_d, pm)
-        
+
+        if v_mode == "Intercut":
+            # Original behavior: scan vocals for silence
+            final_v_path = get_file_path(v_file) or pm.get_asset_path_if_exists("vocals.mp3")
+            if not final_v_path or not os.path.exists(final_v_path):
+                yield "❌ Error: No vocals file found.", pm.df
+                return
+            yield "⏳ Detecting silence and building timeline (this may take a moment)...", pm.df
+            df = scan_vocals_advanced(final_v_path, p_name, m_sil, s_thr, s_mode, min_d, max_d, pm)
+
+        elif v_mode in ("All Vocals", "All Action"):
+            # Get duration from audio file
+            audio_path = get_file_path(v_file) or pm.get_asset_path_if_exists("vocals.mp3") or pm.get_asset_path_if_exists("full_song.mp3")
+            if not audio_path or not os.path.exists(audio_path):
+                yield "❌ Error: No audio file found. Upload a vocals or full song file.", pm.df
+                return
+            try:
+                audio = AudioSegment.from_file(audio_path)
+                total_dur = audio.duration_seconds
+            except Exception as e:
+                yield f"❌ Error loading audio: {e}", pm.df
+                return
+            shot_type = "Vocal" if v_mode == "All Vocals" else "Action"
+            yield f"⏳ Building {v_mode.lower()} timeline ({total_dur:.1f}s)...", pm.df
+            df = build_simple_timeline(total_dur, shot_type, s_mode, min_d, max_d, pm)
+
+        elif v_mode == "Scripted":
+            # Determine duration from user input
+            total_dur = 0
+            if s_total_dur and s_total_dur > 0:
+                total_dur = float(s_total_dur)
+            elif s_shot_count and s_shot_count > 0:
+                avg_dur = (min_d + max_d) / 2.0
+                total_dur = float(s_shot_count) * avg_dur
+            else:
+                yield "❌ Error: Specify a Total Duration or Number of Shots for Scripted mode.", pm.df
+                return
+            yield f"⏳ Building scripted timeline ({total_dur:.1f}s)...", pm.df
+            df = build_simple_timeline(total_dur, "Action", s_mode, min_d, max_d, pm)
+        else:
+            yield "❌ Error: Unknown mode.", pm.df
+            return
+
         if df.empty:
-            yield "❌ Error: Could not build timeline. Check audio file.", pm.df
+            yield "❌ Error: Could not build timeline. Check settings.", pm.df
         else:
             yield "✅ Timeline Built Successfully!", df
 
-    scan_btn.click(run_scan, inputs=[vocals_up, current_proj_var, min_silence_sl, silence_thresh_sl, shot_mode_drp, min_shot_dur, max_shot_dur, pm_state], outputs=[scan_status, shot_table])
+    scan_btn.click(run_scan, inputs=[vocals_up, current_proj_var, min_silence_sl, silence_thresh_sl, shot_mode_drp, min_shot_dur, max_shot_dur, video_mode_drp, scripted_total_dur, scripted_shot_count, pm_state], outputs=[scan_status, shot_table])
     
-    gen_performance_btn.click(generate_performance_description, inputs=[rough_concept_in, plot_out, singer_gender_in, llm_dropdown], outputs=performance_desc_in)
-    gen_plot_btn.click(generate_overarching_plot, inputs=[rough_concept_in, lyrics_in, llm_dropdown, pm_state], outputs=plot_out)
-    
-    gen_concepts_btn.click(generate_concepts_logic, inputs=[plot_out, llm_dropdown, rough_concept_in, performance_desc_in, pm_state], outputs=[shot_table, concept_gen_status])
+    gen_performance_btn.click(generate_performance_description, inputs=[rough_concept_in, plot_out, singer_gender_in, llm_dropdown, video_mode_drp], outputs=performance_desc_in)
+    gen_plot_btn.click(generate_overarching_plot, inputs=[rough_concept_in, lyrics_in, llm_dropdown, pm_state, video_mode_drp], outputs=plot_out)
+
+    gen_concepts_btn.click(generate_concepts_logic, inputs=[plot_out, llm_dropdown, rough_concept_in, performance_desc_in, pm_state, video_mode_drp, singer_gender_in], outputs=[shot_table, concept_gen_status])
     stop_concepts_btn.click(stop_gen, inputs=[pm_state], outputs=[concept_gen_status]) 
 
     # Dynamic UI Refresh Event
